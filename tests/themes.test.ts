@@ -31,3 +31,19 @@ test("Follow Obsidian theme uses only Obsidian's code colours and keeps its back
     if (s.fg) assert.match(s.fg, /^var\(--code-[a-z]+\)$/, capture);
   }
 });
+
+test("styles.css has as many style slots as the plugin uses", async () => {
+  const { STYLE_SLOTS } = await import("../src/main.ts").catch(() => ({ STYLE_SLOTS: undefined }));
+  const css = fs.readFileSync(path.join(import.meta.dirname, "..", "styles.css"), "utf8");
+  const slots = new Set([...css.matchAll(/\.tl-(\d+)::before/g)].map((m) => m[1])).size;
+  const src = fs.readFileSync(path.join(import.meta.dirname, "..", "src/main.ts"), "utf8");
+  const declared = Number(/export const STYLE_SLOTS = (\d+);/.exec(src)?.[1]);
+  assert.equal(slots, declared, `styles.css has ${slots} slots, main.ts declares ${declared}`);
+  void STYLE_SLOTS;
+});
+
+test("no <style> elements and no inline style assignments in the plugin source", () => {
+  const src = fs.readFileSync(path.join(import.meta.dirname, "..", "src/main.ts"), "utf8");
+  assert.doesNotMatch(src, /createEl\("style"|createElement\("style"\)/, "Obsidian does not allow plugins to create <style> elements");
+  assert.doesNotMatch(src, /\.style\.[a-zA-Z]+\s*=/, "use CSS classes or setCssProps instead of element.style");
+});

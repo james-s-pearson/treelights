@@ -77,7 +77,7 @@ function setPath(table: TomlTable, path: string[], value: TomlValue) {
   let t = table;
   for (const part of path.slice(0, -1)) {
     const next = t[part];
-    if (next === undefined) t = (t[part] = {}) as TomlTable;
+    if (next === undefined) t = t[part] = {};
     else if (typeof next === "object" && !Array.isArray(next)) t = next;
     else throw new ThemeImportError(`Key "${path.join(".")}" conflicts with an earlier value.`);
   }

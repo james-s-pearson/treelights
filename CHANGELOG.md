@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+Changes for Obsidian's plugin review; highlighting looks the same.
+
+- Highlight styles now live in `styles.css`, which Obsidian loads; the
+  plugin no longer creates a `<style>` element and sets only CSS
+  variables. Pop-out windows get the styles too.
+- The bundled Tree-sitter runtime no longer contains its unused
+  Node.js file-reading code, so `main.js` has no file-system access.
+- The theme file picker is hidden with a CSS class instead of an
+  inline style; the "Remove" button uses Obsidian's current API.
+
 ## 1.0.0 (12 November 2026)
 
 First public release.

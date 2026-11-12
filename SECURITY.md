@@ -1,7 +1,5 @@
 # Security
 
-Status: draft.
-
 Treelights was designed and directed by James Pearson. Its code and this
 document were generated with AI assistance (Claude), then tested by
 James. This page explains what Treelights does on your computer, what it
@@ -40,7 +38,10 @@ many open-source projects it depends on.
 - highlight queries and themes (text data, not code)
 
 Treelights gives web-tree-sitter every grammar as bytes from inside
-`main.js`. The runtime's ability to download files is never used.
+`main.js`. The runtime's ability to download files is never used, and
+its code for reading files when run under Node.js is removed from
+`main.js` at build time (see "Changes to upstream code" below), so the
+plugin contains no file-system access.
 
 ### On the developer's computer (building Treelights)
 
@@ -90,10 +91,10 @@ JavaScript.
    the build regenerates its parser from `grammar.js` and stops unless
    the result matches the committed `src/` exactly, so the code that runs
    always matches the definition anyone can read.
-7. **Changes to upstream grammars.** Two grammars are changed at build
-   time, on a temporary copy of the pinned source; the source itself and
-   its pin stay untouched, and the result is fingerprinted like any other
-   grammar:
+7. **Changes to upstream code.** Two grammars and the runtime are
+   changed at build time. The grammars are changed on a temporary copy
+   of the pinned source; the source itself and its pin stay untouched,
+   and the result is fingerprinted like any other grammar:
    - The Vim grammar's lexer is split into eight functions
      (`grammars/split-lexer.mjs`) so Obsidian can compile it. The script
      moves code without changing it and stops if the generated code is
@@ -104,6 +105,11 @@ JavaScript.
      `limit`, `top` and `count` (`grammars/patches/kusto.json`). The
      patch is applied to the grammar's JSON form and the parser is
      regenerated from it, so none of the grammar's own JavaScript runs.
+   - web-tree-sitter's Node.js branch, which reads files with Node's
+     `fs` module, is removed from the bundled copy (`esbuild.config.mjs`).
+     Obsidian never takes that branch; removing it means `main.js` holds
+     no file-system code. The build stops if the runtime's code no
+     longer matches what is removed.
 8. **Tests.** `npm test` checks the pins, the fingerprints and the
    allow-list, and proves that a changed or over-reaching grammar is
    caught.
@@ -153,7 +159,7 @@ grammar definition and any hand-written `scanner.c` before it is added.
   Obsidian 1.15's JavaScript engine (V8 13.8) crashes when it optimises
   a very large WebAssembly function; the Vim grammar's lexer (about
   800 KB) did this until it was split (see "Changes to upstream
-  grammars"), and a test now fails if any grammar has a function over
+  code"), and a test now fails if any grammar has a function over
   460 KB. Treelights also stops redrawing if it detects runaway redraws.
 - Fingerprints for the `tree-sitter` program and the WASI SDK are
   recorded per platform. A build on a new platform stops until its first

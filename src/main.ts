@@ -77,7 +77,7 @@ export default class TreelightsPlugin extends Plugin {
   private ready?: Promise<void>;
   private languages = new Map<string, LanguageEntry | undefined>();
   private styleClasses = new Map<string, string>(); // style key -> class
-  private styleEl?: HTMLStyleElement;
+  private styleProps = new Set<string>(); // CSS variables currently set on the page
   private cache = new Map<string, Run[]>(); // lang + code -> runs
   private editorExtension: Extension[] = [];
   private pending = new Set<string>(); // languages being loaded
@@ -117,17 +117,18 @@ export default class TreelightsPlugin extends Plugin {
     this.registerDomEvent(document, "mouseover", showBadgeTooltip);
     this.registerDomEvent(document, "mousedown", openBadgeLink, { capture: true });
     this.registerEvent(this.app.workspace.on("window-open", (win) => {
+      this.writeStyles(); // style variables for the new window
       this.registerDomEvent(win.doc, "mouseover", showBadgeTooltip);
       this.registerDomEvent(win.doc, "mousedown", openBadgeLink, { capture: true });
     }));
 
-    this.editorExtension.push(this.livePreviewPlugin());
+    this.editorExtension.push(this.livePreviewPlugin(this));
     this.registerEditorExtension(this.editorExtension);
     this.registerEvent(this.app.workspace.on("css-change", () => this.refresh()));
   }
 
   onunload() {
-    this.styleEl?.remove();
+    this.clearStyleProps();
     this.parser?.delete();
   }
 
@@ -265,7 +266,7 @@ export default class TreelightsPlugin extends Plugin {
         // true order, with the marker saying the character is there
         ...(m.kind === "hidden" ? { isolate: true } : {}) };
       const c = this.classFor(style);
-      chipClasses.add(c);
+      if (c) chipClasses.add(c);
       const tip = m.link ? `${m.label}${SEP}${m.link.url}${SEP}${m.link.site}` : m.label;
       for (let k = m.start; k < m.end; k++) { cls[k] = c; title[k] = tip; }
     }
@@ -286,7 +287,12 @@ export default class TreelightsPlugin extends Plugin {
     const key = JSON.stringify(style);
     let cls = this.styleClasses.get(key);
     if (!cls) {
+      // style slots are fixed in styles.css (tools/gen-styles.mjs); beyond
+      // them a style is left uncoloured rather than breaking anything
+      if (this.styleClasses.size >= STYLE_SLOTS) return "";
       cls = `tl-${this.styleClasses.size}`;
+      // badges and colour chips also carry "tl-chip" (see styles.css)
+      if (style.preview) cls += " tl-chip";
       this.styleClasses.set(key, cls);
       this.writeStyles();
     }
@@ -299,45 +305,73 @@ export default class TreelightsPlugin extends Plugin {
     this.writeStyles();
   }
 
+  /**
+   * Apply every style in use as CSS variables on the page; the rules that
+   * use them are in styles.css. (Plugins may not create <style> elements.)
+   */
   private writeStyles() {
-    if (!this.styleEl) {
-      this.styleEl = document.head.createEl("style", { attr: { id: "treelights-styles" } });
-    }
     const theme = this.theme;
-    const rules: string[] = [];
+    const props: Record<string, string> = {};
     if (this.settings.useThemeBackground && theme.background) {
-      rules.push(`body.treelights-on { --code-background: ${theme.background}; --code-normal: ${theme.foreground ?? "inherit"}; }`);
+      props["--code-background"] = theme.background;
+      props["--code-normal"] = theme.foreground ?? "inherit";
     }
     for (const [key, cls] of this.styleClasses) {
       const s: Style = JSON.parse(key);
-      // text styles: on the element and on anything Obsidian nests inside it
-      const text = [
-        s.fg && `color: ${s.fg} !important`,
-        s.bold && "font-weight: bold !important",
-        s.italic ? "font-style: italic !important" : "font-style: normal !important",
-        (s.underline || s.undercurl) && "text-decoration: underline !important",
-        s.strikethrough && "text-decoration: line-through !important",
-      ].filter(Boolean).join("; ");
-      // box styles (chips): on the element only, so nested pieces do not
-      // draw their own backgrounds and outlines inside a badge
-      const box = [
-        // a pattern (hazard stripes) needs "background"; a plain colour
-        // keeps "background-color"; dark edges keep white text readable on stripes
-        s.bg && (s.bg.includes("gradient(") ? `background: ${s.bg} !important; text-shadow: 0 0 2px #000, 0 0 2px #000` : `background-color: ${s.bg} !important`),
-        // outline in the text colour so a colour equal to the code
-        // background still shows
-        s.preview && `border-radius: 3px; padding: 0 2px; box-shadow: inset 0 0 0 1px color-mix(in srgb, ${s.fg ?? "currentColor"} 45%, transparent)`,
-      ].filter(Boolean).join("; ");
-      rules.push(`.treelights-on .${cls}, .treelights-on .${cls} span { ${text}; }`);
-      if (box) rules.push(`.treelights-on .${cls} { ${box}; }`);
-      if (box) rules.push(`.treelights-on .${cls} span { background: none !important; box-shadow: none !important; padding: 0 !important; border-radius: 0 !important; }`);
+      const n = cls.split(" ")[0].slice(3); // "tl-12 tl-chip" -> "12"
+      const set = (name: string, value: string | false | undefined) => { if (value) props[`--tl-${n}-${name}`] = value; };
+      set("c", s.fg ?? "inherit");
+      set("w", s.bold && "bold");
+      set("s", s.italic && "italic");
+      set("d", s.strikethrough ? "line-through" : (s.underline || s.undercurl) && "underline");
+      // a pattern (hazard stripes) and a plain colour both work as "background";
+      // dark edges keep white text readable on stripes
+      set("bg", s.bg);
+      set("ts", s.bg?.includes("gradient(") && "0 0 2px #000, 0 0 2px #000");
+      if (s.preview) {
+        // chips: rounded, with an outline in the text colour so a colour
+        // equal to the code background still shows
+        set("r", "3px");
+        set("p", "0 2px");
+        set("sh", `inset 0 0 0 1px color-mix(in srgb, ${s.fg ?? "currentColor"} 45%, transparent)`);
+      }
+      // hidden characters are isolated so a direction override cannot
+      // reorder the line ("Trojan Source")
+      set("ub", s.isolate && "isolate");
+      set("dir", s.isolate && "ltr");
       // a marker (warning sign, or the name of an invisible character) is
-      // drawn before the text by the stylesheet; the note is not changed
-      if (s.isolate) rules.push(`.treelights-on .${cls} { unicode-bidi: isolate; direction: ltr; }`);
-      if (s.marker) rules.push(`.treelights-on .${cls}::before { content: "${s.marker.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"; font-weight: bold; }`);
+      // drawn before the text; the note is not changed
+      set("m", s.marker && `"${s.marker.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`);
     }
-    this.styleEl.textContent = rules.join("\n");
-    document.body.classList.add("treelights-on");
+    this.applyStyleProps(props);
+  }
+
+  /** Set the style variables on every open window's page, clearing old ones. */
+  private applyStyleProps(props: Record<string, string>) {
+    const cleared: Record<string, string> = {};
+    for (const name of this.styleProps) if (!(name in props)) cleared[name] = "";
+    this.styleProps = new Set(Object.keys(props));
+    for (const doc of this.documents()) {
+      doc.body.setCssProps({ ...cleared, ...props });
+      doc.body.classList.add("treelights-on");
+    }
+  }
+
+  private clearStyleProps() {
+    const cleared: Record<string, string> = {};
+    for (const name of this.styleProps) cleared[name] = "";
+    for (const doc of this.documents()) {
+      doc.body.setCssProps(cleared);
+      doc.body.classList.remove("treelights-on");
+    }
+    this.styleProps.clear();
+  }
+
+  /** The main window and any pop-out windows. */
+  private documents(): Document[] {
+    const docs = new Set<Document>([document]);
+    this.app.workspace.iterateAllLeaves((leaf) => { const d = leaf.view?.containerEl?.ownerDocument; if (d) docs.add(d); });
+    return [...docs];
   }
 
   private refresh() {
@@ -428,7 +462,7 @@ export default class TreelightsPlugin extends Plugin {
     const text = code.textContent ?? "";
     const runs = this.patternRuns(text).filter((r) => r.chip);
     if (!runs.length) return;
-    const frag = document.createDocumentFragment();
+    const frag = createFragment();
     let at = 0;
     for (const r of runs) {
       if (r.from > at) frag.append(text.slice(at, r.from));
@@ -516,7 +550,7 @@ export default class TreelightsPlugin extends Plugin {
         else { classes.push(undefined); titles.push(undefined); } // on-screen only; keep the source position
       }
       if (!classes.some(Boolean)) continue;
-      const frag = document.createDocumentFragment();
+      const frag = createFragment();
       let start = 0;
       for (let j = 1; j <= text.length; j++) {
         if (j === text.length || classes[j] !== classes[start] || titles[j] !== titles[start]) {
@@ -573,8 +607,8 @@ export default class TreelightsPlugin extends Plugin {
   // ---------------------------------------------------------------
   // Live Preview and Source mode
 
-  private livePreviewPlugin() {
-    const plugin = this;
+  // the plugin is passed in because the view class has its own "this"
+  private livePreviewPlugin(plugin: TreelightsPlugin) {
     return ViewPlugin.fromClass(class {
       decorations: DecorationSet = Decoration.none;
       // Badges and colour chips: "outer" decorations wrap Obsidian's own
@@ -613,7 +647,7 @@ export default class TreelightsPlugin extends Plugin {
             // inline code in ordinary lines: pattern features only
             if (plugin.patternsOn && open.to >= vFrom && open.from <= vTo) {
               for (const ic of open.text.matchAll(/(`+)([^`]+?)\1(?!`)/g)) {
-                const start = open.from + ic.index! + ic[1].length;
+                const start = open.from + ic.index + ic[1].length;
                 for (const r of plugin.patternRuns(ic[2])) {
                   if (!r.chip) continue;
                   outerBuilder.add(start + r.from, start + r.to, Decoration.mark({ class: r.cls,
@@ -692,6 +726,9 @@ function showBadgeTooltip(e: MouseEvent) {
   else if (!el.dataset.tlTipSet) { setTooltip(el, tip); el.dataset.tlTipSet = "1"; }
 }
 
+/** Style slots in styles.css; must match SLOTS in tools/gen-styles.mjs (a test checks). */
+export const STYLE_SLOTS = 256;
+
 /** Grammars used only for code inside other code; not listed as languages. */
 const INTERNAL_GRAMMARS = new Set(["comment", "luadoc", "luap", "printf", "regex", "query", "markdown_inline", "html_tags", "dtd"]);
 
@@ -706,7 +743,7 @@ class TreelightsSettingTab extends PluginSettingTab {
     const themes = [...BUILT_IN_THEMES.filter((t) => !custom.has(t.name)), ...s.customThemes];
     const pick = (name: string, desc: string, key: "darkTheme" | "lightTheme") =>
       new Setting(containerEl).setName(name).setDesc(desc).addDropdown((d) => {
-        themes.forEach((t) => d.addOption(t.name, t.name));
+        for (const t of themes) d.addOption(t.name, t.name);
         d.setValue(s[key]).onChange(async (v) => { s[key] = v; await this.plugin.saveSettings(); });
       });
     pick("Dark theme", "Used when Obsidian is in dark mode.", "darkTheme");
@@ -721,11 +758,7 @@ class TreelightsSettingTab extends PluginSettingTab {
         // Settings may be in its own window: the file picker must belong to
         // the same window as the click, or the browser will not open it.
         const doc = b.buttonEl.ownerDocument;
-        const input = doc.createElement("input");
-        input.type = "file";
-        input.accept = ".toml";
-        input.style.display = "none";
-        doc.body.appendChild(input);
+        const input = doc.body.createEl("input", { type: "file", cls: "treelights-file-input", attr: { accept: ".toml" } });
         input.onchange = async () => {
           const file = input.files?.[0];
           input.remove();
@@ -750,7 +783,7 @@ class TreelightsSettingTab extends PluginSettingTab {
       }));
     for (const t of s.customThemes) {
       new Setting(containerEl).setName(t.name).setDesc(`Imported Helix theme (${t.type}).`)
-        .addButton((b) => b.setButtonText("Remove").setWarning().onClick(async () => {
+        .addButton((b) => b.setButtonText("Remove").setDestructive().onClick(async () => {
           await this.plugin.removeHelixTheme(t.name);
           this.display();
         }));

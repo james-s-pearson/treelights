@@ -25,4 +25,4 @@ for (const f of fs.readdirSync(path.join(root, "build/wasm")).filter((f) => f.en
 const text = fs.readFileSync(file, "utf8");
 const t0 = performance.now();
 const spans = highlight(text, lang, (n) => cache.get(n), parser);
-console.log(`${path.basename(file)}: ${text.length} chars, ${spans.length} spans, ${Math.round(performance.now() - t0)} ms`);
+process.stdout.write(`${path.basename(file)}: ${text.length} chars, ${spans.length} spans, ${Math.round(performance.now() - t0)} ms\n`);

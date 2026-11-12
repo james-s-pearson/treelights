@@ -38,7 +38,7 @@ export function findColours(text: string): PatternMatch[] {
   for (const m of text.matchAll(hexRe)) {
     let h = m[1];
     if (h.length <= 4) h = [...h].map((c) => c + c).join("");
-    out.push({ start: m.index!, end: m.index! + m[0].length, kind: "colour", label: "Colour", colour: `#${h.slice(0, 6).toLowerCase()}` });
+    out.push({ start: m.index, end: m.index + m[0].length, kind: "colour", label: "Colour", colour: `#${h.slice(0, 6).toLowerCase()}` });
   }
   const fnRe = /\b(rgba?|hsla?)\(\s*([\d.]+(?:deg|%)?)\s*[,\s]\s*([\d.]+%?)\s*[,\s]\s*([\d.]+%?)\s*(?:[,/]\s*[\d.]+%?\s*)?\)/gi;
   for (const m of text.matchAll(fnRe)) {
@@ -49,7 +49,7 @@ export function findColours(text: string): PatternMatch[] {
     } else {
       colour = hslToHex(parseFloat(m[2]), num(m[3].endsWith("%") ? m[3] : m[3] + "%", 1), num(m[4].endsWith("%") ? m[4] : m[4] + "%", 1));
     }
-    out.push({ start: m.index!, end: m.index! + m[0].length, kind: "colour", label: "Colour", colour });
+    out.push({ start: m.index, end: m.index + m[0].length, kind: "colour", label: "Colour", colour });
   }
   return out;
 }
@@ -169,7 +169,7 @@ export function findSecrets(text: string): PatternMatch[] {
   const taken: Array<[number, number]> = [];
   for (const p of SECRETS) {
     for (const m of text.matchAll(p.re)) {
-      const s = m.index!, e = s + m[0].length;
+      const s = m.index, e = s + m[0].length;
       if (p.check && !p.check(m[0])) continue;
       if (taken.some(([a, b]) => s < b && a < e)) continue;
       taken.push([s, e]);
@@ -205,7 +205,7 @@ export function findHidden(text: string): PatternMatch[] {
   for (const m of text.matchAll(/[\u{E0000}-\u{E007F}]+/gu)) {
     const hidden = [...m[0]].map((c) => String.fromCodePoint(c.codePointAt(0)! - 0xe0000)).join("").replace(/[^\x20-\x7e]/g, "");
     const shown = hidden.length > 40 ? hidden.slice(0, 40) + "…" : hidden;
-    out.push({ start: m.index!, end: m.index! + m[0].length, kind: "hidden",
+    out.push({ start: m.index, end: m.index + m[0].length, kind: "hidden",
       label: `Hidden text (Unicode tag characters): "${hidden}"`, marker: `⟨hidden: ${shown}⟩` });
   }
   for (let i = 0; i < text.length; i++) {
@@ -220,7 +220,7 @@ export function findHidden(text: string): PatternMatch[] {
     const w = m[0];
     if (!/\p{Script=Latin}/u.test(w) || !/[\p{Script=Cyrillic}\p{Script=Greek}]/u.test(w)) continue;
     for (const c of w.matchAll(/[\p{Script=Cyrillic}\p{Script=Greek}]/gu)) {
-      const at = m.index! + c.index!;
+      const at = m.index + c.index;
       const script = /\p{Script=Cyrillic}/u.test(c[0]) ? "Cyrillic" : "Greek";
       out.push({ start: at, end: at + c[0].length, kind: "hidden",
         label: `Look-alike letter: ${script} "${c[0]}" (U+${c[0].codePointAt(0)!.toString(16).toUpperCase().padStart(4, "0")}) in a Latin word` });
@@ -237,7 +237,7 @@ export function findSecurity(text: string): PatternMatch[] {
   const free = (s: number, e: number) => !taken.some(([a, b]) => s < b && a < e);
   for (const p of SECURITY) { // earlier kinds win overlaps (URLs before the IPs inside them)
     for (const m of text.matchAll(p.re)) {
-      const s = m.index!, e = s + m[0].length;
+      const s = m.index, e = s + m[0].length;
       if (p.check && !p.check(m[0])) continue;
       if (!free(s, e)) continue;
       taken.push([s, e]);

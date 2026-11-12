@@ -11,7 +11,7 @@ import { highlight, paint, prepareQuery, type LanguageEntry } from "../src/engin
 import { resolveStyle, type Theme } from "../src/theme.ts";
 import { queryFiles } from "./queries.mjs";
 
-const [lang, srcFile, dumpFile, themeFile, queriesDir = "queries"] = process.argv.slice(2);
+const [lang, srcFile, dumpFile, themeFile] = process.argv.slice(2);
 const root = path.resolve(import.meta.dirname, "..");
 await Parser.init();
 const parser = new Parser();
@@ -70,7 +70,7 @@ for (let i = 0; i < text.length; i++) {
       total++;
       if (want[0].toLowerCase() === got[0].toLowerCase() && want[1] === got[1]) same++;
       else {
-        const word = text.slice(i, i + 12).split(/[\s(){}\[\],.:="']/)[0] || ch;
+        const word = text.slice(i, i + 12).split(/[\s(){}[\],.:="']/)[0] || ch;
         const cap = win[i] >= 0 ? spans[win[i]].capture : "-";
         const key = `${JSON.stringify(word)} nvim ${want[0]}${want[1] ? " i" : ""}  treelights ${got[0]}${got[1] ? " i" : ""} (${cap})`;
         diffs.set(key, (diffs.get(key) ?? 0) + 1);
@@ -79,5 +79,5 @@ for (let i = 0; i < text.length; i++) {
   }
   col += Buffer.byteLength(ch, "utf8"); // Neovim columns are bytes
 }
-console.log(`${lang}: ${same}/${total} characters match (${((100 * same) / total).toFixed(2)}%)`);
-for (const [k, v] of [...diffs].sort((a, b) => b[1] - a[1]).slice(0, 25)) console.log(String(v).padStart(4), k);
+process.stdout.write(`${lang}: ${same}/${total} characters match (${((100 * same) / total).toFixed(2)}%)\n`);
+for (const [k, v] of [...diffs].sort((a, b) => b[1] - a[1]).slice(0, 25)) process.stdout.write(`${String(v).padStart(4)} ${k}\n`);
