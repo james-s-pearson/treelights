@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.0.1 (12 November 2026)
 
 Changes for Obsidian's plugin review; highlighting looks the same.
 

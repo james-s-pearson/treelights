@@ -1,7 +1,7 @@
 {
   "id": "treelights",
   "name": "Treelights",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "minAppVersion": "1.15.0",
   "description": "Highlight code blocks accurately with Tree-sitter, with themes, colour previews and security warnings.",
   "author": "James Pearson",
