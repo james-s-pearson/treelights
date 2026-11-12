@@ -1,0 +1,33 @@
+// Treelights' own themes (tools/make-themes.mjs). Run with: npm test
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
+
+const load = (f: string) => JSON.parse(fs.readFileSync(path.join(import.meta.dirname, "..", "themes", f), "utf8"));
+const lum = (hex: string) => {
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
+    .map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+const contrast = (a: string, b: string) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+
+test("Neon Alley themes: every colour reaches 4.5:1 on the background", () => {
+  for (const f of ["neon-alley-dark.json", "neon-alley-light.json"]) {
+    const t = load(f);
+    for (const [capture, s] of Object.entries<{ fg?: string }>(t.captures)) {
+      if (!s.fg) continue;
+      const c = contrast(s.fg, t.background);
+      assert.ok(c >= 4.5, `${t.name}: ${capture} ${s.fg} is ${c.toFixed(2)}:1`);
+    }
+  }
+});
+
+test("Follow Obsidian theme uses only Obsidian's code colours and keeps its background", () => {
+  const t = load("obsidian.json");
+  assert.equal(t.background, undefined);
+  assert.equal(t.foreground, undefined);
+  for (const [capture, s] of Object.entries<{ fg?: string }>(t.captures)) {
+    if (s.fg) assert.match(s.fg, /^var\(--code-[a-z]+\)$/, capture);
+  }
+});

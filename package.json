@@ -1,0 +1,30 @@
+{
+  "name": "treelights",
+  "version": "1.0.0",
+  "description": "Accurate Tree-sitter syntax highlighting for Obsidian code blocks, with themes, theme import, colour previews and security indicators.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "postinstall": "node tools/check-tools.mjs",
+    "build:grammars": "node grammars/build.mjs",
+    "build": "node esbuild.config.mjs production",
+    "dev": "node esbuild.config.mjs",
+    "test": "node --test tests/*.test.ts",
+    "test:yara": "cd grammars/tree-sitter-yara && tree-sitter test"
+  },
+  "license": "MIT",
+  "author": "James Pearson",
+  "dependencies": {
+    "web-tree-sitter": "0.26.13"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.6",
+    "esbuild": "0.28.2",
+    "obsidian": "1.14.4",
+    "tree-sitter-cli": "0.26.13",
+    "typescript": "7.0.2"
+  },
+  "allowScripts": {
+    "tree-sitter-cli@0.25.10": true
+  }
+}

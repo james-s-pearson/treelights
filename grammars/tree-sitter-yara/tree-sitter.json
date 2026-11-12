@@ -1,0 +1,30 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "yara",
+      "camelcase": "Yara",
+      "title": "YARA",
+      "scope": "source.yara",
+      "file-types": [
+        "yar",
+        "yara"
+      ],
+      "highlights": "queries/highlights.scm",
+      "injection-regex": "^(yara|yar)$"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "YARA grammar for tree-sitter",
+    "authors": [
+      {
+        "name": "James Pearson"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/james-s-pearson/tree-sitter-yara"
+    }
+  }
+}

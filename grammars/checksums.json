@@ -1,0 +1,134 @@
+{
+  "tools": {
+    "tree-sitter-cli": {
+      "darwin-arm64": {
+        "version": "0.26.13",
+        "sha256": "89375793233b2854ca3ead7bc7ccdf4c3e22497052c0bd2429fe9efdb8968912"
+      }
+    },
+    "wasi-sdk": {
+      "darwin-arm64": {
+        "sha256": "89448027a25e1d8584c3eb9c3e601faa09a56bfa31f93f3f8d579c7a9153df02"
+      }
+    }
+  },
+  "grammars": {
+    "bash": {
+      "sha256": "3ad20050b90b7537100769f0ade23f54663f2e397f88b6b91ae5307f41a3b28d"
+    },
+    "c": {
+      "sha256": "36ebf9ce82e3af95f65d47bb37f6959643aac70a274ad119786568a3b16f3399"
+    },
+    "comment": {
+      "sha256": "b4aed30d5ea03aa6f7a27628f433304bd378212ce88726acf08f0923d6aeada1"
+    },
+    "cpp": {
+      "sha256": "a747f0b6cb99d717b8e10f51327ee15e1861bea4aa1c69f34d9c6e07280438de"
+    },
+    "css": {
+      "sha256": "4bf8816c81317b8e74fec17cddcbf797ffd23f33a0c96d9d429c3ce8ad811437"
+    },
+    "diff": {
+      "sha256": "76f6c0f2e273cbc4242ac1958af0fe7edef297112ac32e389e925fdb10ddc772"
+    },
+    "dockerfile": {
+      "sha256": "4cfb4064196745eaaa6a1365c61b35c1681beb9dfeecde8b1d3c6f9689d8e7ef"
+    },
+    "dtd": {
+      "sha256": "58a9c64d30148006e56b9095d6eb84ba22f97ed5879f617dbedeaf6237946d69"
+    },
+    "git_config": {
+      "sha256": "bbc79ba0c0b3eb253d8d3b5a48d9ac42fedcc042ffb14f54e927b23ad782437e"
+    },
+    "gitattributes": {
+      "sha256": "97bf3fbf93f92bc522658f8b1b6f281d0824c44921b49ba57381a7335bc26eb7"
+    },
+    "gitignore": {
+      "sha256": "64c755890ede296c5f4e4f0e3d92cf84203b10412743621603aff303de890bbb"
+    },
+    "hcl": {
+      "sha256": "37e88f41deea4fcc2ed66151038c4beec64da5ac2302859fbe67e23a84230d75"
+    },
+    "html": {
+      "sha256": "0a9e1d46ccc2df616d77e7c07bb744e92ee5b2257d4364ea327c09c0ee067058"
+    },
+    "ini": {
+      "sha256": "04f80fde1a3a67dda12ab6150cba216459419c44bb19004940314900d742dd55"
+    },
+    "java": {
+      "sha256": "3c9cd42496cc5343715347ef80bc9df0d1832349b302029e0e1f2302c2132a65"
+    },
+    "javascript": {
+      "sha256": "cc4602df640c42e48a9189dcba0b3f2bd5c84071379ae884310c0d303807932b"
+    },
+    "json": {
+      "sha256": "db4a1cf3f084fab6afb785bfbdd38903a50c64a61c74961e439aa6702e5ac807"
+    },
+    "json5": {
+      "sha256": "fc5f403d583a26868a4988ca63fd925523c8b06045fffa7988e9719408c08e26"
+    },
+    "kusto": {
+      "sha256": "d61678f2866d168035ceeacc61ac5dedd5931b4d9db1df0915c9f71882477127"
+    },
+    "lua": {
+      "sha256": "b45fac61a274aa3c303848abdcd4d3748d8a3f54dd5acc1a22c037b3f529848b"
+    },
+    "luadoc": {
+      "sha256": "cc805aa8ed20e0a22b81c1264259712b83be3c62612f09efa8f8e0a65e373d83"
+    },
+    "luap": {
+      "sha256": "820bcba965b4489e4e57ad8c3198fa2d8aba9582e414ca431fb4f361922535a7"
+    },
+    "markdown": {
+      "sha256": "db5f95b67e5b38ca22a8c07a094d206d24c87e780ea3a6cab122569579777430"
+    },
+    "markdown_inline": {
+      "sha256": "947c0198751cb11556dedbb5e6ad01b92f3fec9d455a5dc70312aef409a2020b"
+    },
+    "powershell": {
+      "sha256": "28b0348dcd5b9477c558f786e615ed6f3cde5262b032e287fca29f707ac18328"
+    },
+    "printf": {
+      "sha256": "3d62bcff127390b1a1127ed8423f890dcbde3f1c298d416b76001efa0cf6af99"
+    },
+    "python": {
+      "sha256": "d587f57f9c7eb6db6fa72096a8d95da1599aef9c3ba58e258978a279f619b200"
+    },
+    "query": {
+      "sha256": "6eef35a46df26a22352d3bb6c830abb1c2e64061c053a2e07b62344048da456b"
+    },
+    "regex": {
+      "sha256": "6a8fac601a8f5090f6b2b2d5b49d126f100db36fdffac718abfa0a053ee2acaa"
+    },
+    "rego": {
+      "sha256": "182dbdab9d98311e8f1e338dfdb32f487fe9b1e9e77e50efa3d8dc3a8d9a79b3"
+    },
+    "sql": {
+      "sha256": "80eaf191bcea61e260ea2f1d34929854aa60bdfb9d13dd2759dce41c468f1b6f"
+    },
+    "terraform": {
+      "sha256": "e685708597d2189b8cce52184df3b8db01be7c35fc3c82aa62c5e8246f1c684c"
+    },
+    "toml": {
+      "sha256": "a831f2ded723580751a7f092efb1bb99fe0d5dccfe8ef779fbbe11ee81c60381"
+    },
+    "tsx": {
+      "sha256": "1a7806e76606e677dffb10a49d538976ea7a208be3b3e19243f15d82126d5b64"
+    },
+    "typescript": {
+      "sha256": "36b57857943c4f7a26d877e5588c917a5f0c6eb103a7cdebd1fe146b0c78d7f1"
+    },
+    "vim": {
+      "sha256": "c6d262fb88f641af51afed7f434af576db06cc3fe3b13292a5a5ad8aca74b951"
+    },
+    "xml": {
+      "sha256": "879917b4e60dc4fd0d36e33bee17aaa42d17eac4c4b084e99809c25c20996da2"
+    },
+    "yaml": {
+      "sha256": "b83c17175556c89f7255e50b060653f86fbe52db8d4f954784eece4a164f6d97"
+    },
+    "yara": {
+      "sha256": "fef65ba1defed272cd83722d8ee801a4bc5dc9d606dbd0d5876f4ac4adeb1479"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+// JSON5 sample for Treelights tests.
+{
+  name: 'treelights-sample',
+  version: 2,
+  ratio: .75,
+  hex: 0x1F,
+  enabled: true,
+  owner: null,
+  ports: [22, 80, 443,],
+  "quoted-key": "value",
+}

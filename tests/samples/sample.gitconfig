@@ -1,0 +1,12 @@
+# git config sample for Treelights tests.
+[user]
+	name = Example User
+	email = user@example.com
+[core]
+	editor = nvim
+	autocrlf = false
+[alias]
+	st = status -sb
+	lg = log --oneline --graph
+[url "git@github.com:"]
+	insteadOf = https://github.com/

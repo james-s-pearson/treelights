@@ -1,0 +1,330 @@
+============================================================
+Text strings and escapes
+============================================================
+
+rule S {
+  strings:
+    $a = "plain"
+    $b = "quote \" backslash \\ tab \t nl \n cr \r byte \x4D"
+    $ = "anonymous"
+    $_unref = "not referenced"
+  condition:
+    any of them
+}
+
+---
+
+(source_file
+  (rule_definition
+    (identifier)
+    (strings_section
+      (string_definition
+        (string_identifier)
+        (string))
+      (string_definition
+        (string_identifier)
+        (string
+          (escape_sequence)
+          (escape_sequence)
+          (escape_sequence)
+          (escape_sequence)
+          (escape_sequence)
+          (escape_sequence)))
+      (string_definition
+        (string_identifier)
+        (string))
+      (string_definition
+        (string_identifier)
+        (string)))
+    (condition_section
+      (of_expression
+        (quantifier)
+        (them)))))
+
+============================================================
+Text string modifiers
+============================================================
+
+rule S {
+  strings:
+    $a = "x" nocase wide ascii fullword private
+    $b = "x" xor
+    $c = "x" xor(0x01)
+    $d = "x" xor(1-255)
+    $e = "x" base64
+    $f = "x" base64wide
+    $g = "x" base64("!@#$%^&*(){}[].,|ABCDEFGHIJ\x09LMNOPQRSTUVWXYZabcdefghijklmnopqrstu")
+  condition:
+    all of them
+}
+
+---
+
+(source_file
+  (rule_definition
+    (identifier)
+    (strings_section
+      (string_definition
+        (string_identifier)
+        (string)
+        (modifier)
+        (modifier)
+        (modifier)
+        (modifier)
+        (modifier))
+      (string_definition
+        (string_identifier)
+        (string)
+        (xor_modifier))
+      (string_definition
+        (string_identifier)
+        (string)
+        (xor_modifier
+          (integer)))
+      (string_definition
+        (string_identifier)
+        (string)
+        (xor_modifier
+          (integer)
+          (integer)))
+      (string_definition
+        (string_identifier)
+        (string)
+        (base64_modifier))
+      (string_definition
+        (string_identifier)
+        (string)
+        (base64_modifier))
+      (string_definition
+        (string_identifier)
+        (string)
+        (base64_modifier
+          (string
+            (escape_sequence)))))
+    (condition_section
+      (of_expression
+        (quantifier)
+        (them)))))
+
+============================================================
+Hex strings
+============================================================
+
+rule H {
+  strings:
+    $a = { 4D 5A 90 00 }
+    $b = { E2 34 ?? C8 A? ?B FB }
+    $c = { 4D5A9000 }
+    $d = { ~00 ~?0 ~A? }
+  condition:
+    any of them
+}
+
+---
+
+(source_file
+  (rule_definition
+    (identifier)
+    (strings_section
+      (string_definition
+        (string_identifier)
+        (hex_string
+          (hex_byte)
+          (hex_byte)
+          (hex_byte)
+          (hex_byte)))
+      (string_definition
+        (string_identifier)
+        (hex_string
+          (hex_byte)
+          (hex_byte)
+          (hex_byte)
+          (hex_byte)
+          (hex_byte)
+          (hex_byte)
+          (hex_byte)))
+      (string_definition
+        (string_identifier)
+        (hex_string
+          (hex_byte)
+          (hex_byte)
+          (hex_byte)
+          (hex_byte)))
+      (string_definition
+        (string_identifier)
+        (hex_string
+          (hex_byte)
+          (hex_byte)
+          (hex_byte))))
+    (condition_section
+      (of_expression
+        (quantifier)
+        (them)))))
+
+============================================================
+Hex jumps
+============================================================
+
+rule J {
+  strings:
+    $a = { F4 23 [4] 62 B4 }
+    $b = { F4 23 [4-6] 62 B4 }
+    $c = { F4 23 [10-] 62 B4 }
+    $d = { F4 23 [-] 62 B4 }
+    $e = { F4 23 [ 2 - 3 ] 62 B4 }
+  condition:
+    any of them
+}
+
+---
+
+(source_file
+  (rule_definition
+    (identifier)
+    (strings_section
+      (string_definition
+        (string_identifier)
+        (hex_string
+          (hex_byte)
+          (hex_byte)
+          (hex_jump)
+          (hex_byte)
+          (hex_byte)))
+      (string_definition
+        (string_identifier)
+        (hex_string
+          (hex_byte)
+          (hex_byte)
+          (hex_jump)
+          (hex_byte)
+          (hex_byte)))
+      (string_definition
+        (string_identifier)
+        (hex_string
+          (hex_byte)
+          (hex_byte)
+          (hex_jump)
+          (hex_byte)
+          (hex_byte)))
+      (string_definition
+        (string_identifier)
+        (hex_string
+          (hex_byte)
+          (hex_byte)
+          (hex_jump)
+          (hex_byte)
+          (hex_byte)))
+      (string_definition
+        (string_identifier)
+        (hex_string
+          (hex_byte)
+          (hex_byte)
+          (hex_jump)
+          (hex_byte)
+          (hex_byte))))
+    (condition_section
+      (of_expression
+        (quantifier)
+        (them)))))
+
+============================================================
+Hex alternatives and comments
+============================================================
+
+rule A {
+  strings:
+    $a = { F4 23 ( 62 B4 | 56 | 45 ?? 67 ) 45 }
+    $b = { ( 01 | ( 02 | 03 ) ) [2] }
+    $c = { 4D 5A // MZ
+           /* PE */ 50 45 } private
+  condition:
+    any of them
+}
+
+---
+
+(source_file
+  (rule_definition
+    (identifier)
+    (strings_section
+      (string_definition
+        (string_identifier)
+        (hex_string
+          (hex_byte)
+          (hex_byte)
+          (hex_alternative
+            (hex_byte)
+            (hex_byte)
+            (hex_byte)
+            (hex_byte)
+            (hex_byte)
+            (hex_byte))
+          (hex_byte)))
+      (string_definition
+        (string_identifier)
+        (hex_string
+          (hex_alternative
+            (hex_byte)
+            (hex_alternative
+              (hex_byte)
+              (hex_byte)))
+          (hex_jump)))
+      (string_definition
+        (string_identifier)
+        (hex_string
+          (hex_byte)
+          (hex_byte)
+          (comment)
+          (comment)
+          (hex_byte)
+          (hex_byte))
+        (modifier)))
+    (condition_section
+      (of_expression
+        (quantifier)
+        (them)))))
+
+============================================================
+Regular expressions
+============================================================
+
+rule R {
+  strings:
+    $a = /md5: [0-9a-fA-F]{32}/
+    $b = /state: (on|off)/is
+    $c = /[^\/]+\/gate\.php/ nocase wide
+    $d = /a[/]b/
+    $e = /\x00\d{2,}?\b/ fullword ascii
+  condition:
+    any of them
+}
+
+---
+
+(source_file
+  (rule_definition
+    (identifier)
+    (strings_section
+      (string_definition
+        (string_identifier)
+        (regex))
+      (string_definition
+        (string_identifier)
+        (regex))
+      (string_definition
+        (string_identifier)
+        (regex)
+        (modifier)
+        (modifier))
+      (string_definition
+        (string_identifier)
+        (regex))
+      (string_definition
+        (string_identifier)
+        (regex)
+        (modifier)
+        (modifier)))
+    (condition_section
+      (of_expression
+        (quantifier)
+        (them)))))

@@ -1,0 +1,163 @@
+{
+  "name": "Neon Alley (light)",
+  "type": "light",
+  "background": "#e8ebf0",
+  "foreground": "#15181d",
+  "source": "Treelights (tools/make-themes.mjs)",
+  "captures": {
+    "variable": {
+      "fg": "#15181d"
+    },
+    "variable.builtin": {
+      "fg": "#c81e1e"
+    },
+    "variable.parameter": {
+      "fg": "#915c00"
+    },
+    "variable.member": {
+      "fg": "#00756a"
+    },
+    "property": {
+      "fg": "#00756a"
+    },
+    "constant": {
+      "fg": "#b54200"
+    },
+    "constant.builtin": {
+      "fg": "#c81e1e"
+    },
+    "boolean": {
+      "fg": "#b54200"
+    },
+    "number": {
+      "fg": "#b54200"
+    },
+    "string": {
+      "fg": "#427300"
+    },
+    "character": {
+      "fg": "#427300"
+    },
+    "string.escape": {
+      "fg": "#b0129a"
+    },
+    "string.regexp": {
+      "fg": "#b0129a"
+    },
+    "string.special": {
+      "fg": "#b0129a"
+    },
+    "character.special": {
+      "fg": "#b0129a"
+    },
+    "keyword": {
+      "fg": "#b0129a"
+    },
+    "keyword.operator": {
+      "fg": "#b0129a"
+    },
+    "function": {
+      "fg": "#00728b"
+    },
+    "function.builtin": {
+      "fg": "#00728b"
+    },
+    "constructor": {
+      "fg": "#1d67c1"
+    },
+    "type": {
+      "fg": "#1d67c1"
+    },
+    "type.builtin": {
+      "fg": "#1d67c1"
+    },
+    "module": {
+      "fg": "#1d67c1"
+    },
+    "module.builtin": {
+      "fg": "#c81e1e"
+    },
+    "attribute": {
+      "fg": "#915c00"
+    },
+    "label": {
+      "fg": "#00728b"
+    },
+    "operator": {
+      "fg": "#4b5260"
+    },
+    "punctuation": {
+      "fg": "#4b5260"
+    },
+    "punctuation.special": {
+      "fg": "#b0129a"
+    },
+    "comment": {
+      "fg": "#5c6370",
+      "italic": true
+    },
+    "comment.error": {
+      "fg": "#c81e1e"
+    },
+    "comment.warning": {
+      "fg": "#915c00"
+    },
+    "comment.todo": {
+      "fg": "#00728b"
+    },
+    "comment.note": {
+      "fg": "#1d67c1"
+    },
+    "tag": {
+      "fg": "#c81e1e"
+    },
+    "tag.attribute": {
+      "fg": "#915c00"
+    },
+    "tag.delimiter": {
+      "fg": "#4b5260"
+    },
+    "markup.heading": {
+      "fg": "#b54200",
+      "bold": true
+    },
+    "markup.strong": {
+      "bold": true
+    },
+    "markup.italic": {
+      "italic": true
+    },
+    "markup.strikethrough": {
+      "strikethrough": true
+    },
+    "markup.link": {
+      "fg": "#1d67c1",
+      "underline": true
+    },
+    "markup.link.label": {
+      "fg": "#00728b"
+    },
+    "markup.raw": {
+      "fg": "#427300"
+    },
+    "markup.list": {
+      "fg": "#b0129a"
+    },
+    "markup.quote": {
+      "fg": "#5c6370",
+      "italic": true
+    },
+    "diff.plus": {
+      "fg": "#427300"
+    },
+    "diff.minus": {
+      "fg": "#c81e1e"
+    },
+    "diff.delta": {
+      "fg": "#915c00"
+    },
+    "error": {
+      "fg": "#c81e1e"
+    }
+  }
+}

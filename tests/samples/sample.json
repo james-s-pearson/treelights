@@ -1,0 +1,9 @@
+{
+  "name": "treelights-sample",
+  "version": "1.0.0",
+  "private": true,
+  "ports": [22, 80, 443],
+  "owner": null,
+  "ratio": 0.75,
+  "nested": { "enabled": false, "tags": ["a", "b"] }
+}

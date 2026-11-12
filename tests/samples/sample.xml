@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- XML sample for Treelights tests. -->
+<!DOCTYPE report [
+  <!ELEMENT report (finding*)>
+]>
+<report xmlns="urn:example:scan" generated="2026-11-11">
+  <finding id="1" severity="high">
+    <title>Open port</title>
+    <detail><![CDATA[port 22 open & reachable]]></detail>
+  </finding>
+  <empty/>
+</report>

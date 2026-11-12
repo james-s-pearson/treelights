@@ -1,0 +1,9 @@
+{
+  "_note": "Treelights patch for tree-sitter-kusto (applied to src/grammar.json; the parser is regenerated from JSON, so the grammar's JavaScript never runs). Adds common KQL tabular operators missing from the 2023 grammar, and operators that take no arguments (count, getschema, serialize).",
+  "addChoiceMembers": {
+    "operator": ["take", "limit", "top", "sample", "render", "project-rename", "project-keep", "project-reorder", "search", "as", "count", "getschema", "serialize"]
+  },
+  "addAlternatives": {
+    "_operation_details": [{ "type": "SYMBOL", "name": "operator" }]
+  }
+}

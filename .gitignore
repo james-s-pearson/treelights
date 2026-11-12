@@ -1,0 +1,6 @@
+node_modules/
+build/
+main.js
+*.wasm
+.DS_Store
+src/generated/

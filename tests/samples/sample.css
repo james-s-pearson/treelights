@@ -1,0 +1,8 @@
+/* CSS sample for Treelights tests. */
+:root { --accent: #ff6b1a; }
+.report > li:hover, #top::before {
+  color: var(--accent);
+  margin: 0 auto 1.5rem;
+  font-weight: 700 !important;
+}
+@media (prefers-color-scheme: dark) { body { background: rgb(34 36 54 / 90%); } }

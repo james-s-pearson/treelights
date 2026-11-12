@@ -1,0 +1,6 @@
+# gitignore sample
+node_modules/
+*.log
+!keep.log
+/build
+**/.DS_Store

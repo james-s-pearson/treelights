@@ -1,0 +1,518 @@
+============================================================
+Boolean operators and precedence
+============================================================
+
+rule C { condition: $a and $b or not $c and defined x }
+
+---
+
+(source_file
+  (rule_definition
+    (identifier)
+    (condition_section
+      (binary_expression
+        (binary_expression
+          (string_identifier)
+          (string_identifier))
+        (binary_expression
+          (unary_expression
+            (string_identifier))
+          (unary_expression
+            (identifier)))))))
+
+============================================================
+Arithmetic, bitwise and comparison
+============================================================
+
+rule C { condition: (1 + 2 * 3 - 4 \ 2 % 5) << 1 >> 2 & 0xff | 0x10 ^ ~0 == -3 and filesize >= 200KB and filesize < 2MB and 0o17 != 1.5 }
+
+---
+
+(source_file
+  (rule_definition
+    (identifier)
+    (condition_section
+      (binary_expression
+        (binary_expression
+          (binary_expression
+            (binary_expression
+              (binary_expression
+                (binary_expression
+                  (binary_expression
+                    (binary_expression
+                      (parenthesized_expression
+                        (binary_expression
+                          (binary_expression
+                            (integer)
+                            (binary_expression
+                              (integer)
+                              (integer)))
+                          (binary_expression
+                            (binary_expression
+                              (integer)
+                              (integer))
+                            (integer))))
+                      (integer))
+                    (integer))
+                  (integer))
+                (binary_expression
+                  (integer)
+                  (unary_expression
+                    (integer))))
+              (unary_expression
+                (integer)))
+            (binary_expression
+              (filesize)
+              (integer)))
+          (binary_expression
+            (filesize)
+            (integer)))
+        (binary_expression
+          (integer)
+          (float))))))
+
+============================================================
+Counts, offsets and lengths
+============================================================
+
+rule C { condition: #a == 6 and @a[1] < 100 and @b > 0 and !a[2] == 4 and !b == 3 and #a in (filesize-500..filesize) == 2 }
+
+---
+
+(source_file
+  (rule_definition
+    (identifier)
+    (condition_section
+      (binary_expression
+        (binary_expression
+          (binary_expression
+            (binary_expression
+              (binary_expression
+                (binary_expression
+                  (string_count)
+                  (integer))
+                (binary_expression
+                  (index_expression
+                    (string_offset)
+                    (integer))
+                  (integer)))
+              (binary_expression
+                (string_offset)
+                (integer)))
+            (binary_expression
+              (index_expression
+                (string_length)
+                (integer))
+              (integer)))
+          (binary_expression
+            (string_length)
+            (integer)))
+        (binary_expression
+          (in_expression
+            (string_count)
+            (range
+              (binary_expression
+                (filesize)
+                (integer))
+              (filesize)))
+          (integer))))))
+
+============================================================
+At and in
+============================================================
+
+rule C { condition: $a at 100 and $b at pe.entry_point + 0x10 and $c in (0..100) and $d in (100..filesize) }
+
+---
+
+(source_file
+  (rule_definition
+    (identifier)
+    (condition_section
+      (binary_expression
+        (binary_expression
+          (binary_expression
+            (at_expression
+              (string_identifier)
+              (integer))
+            (at_expression
+              (string_identifier)
+              (binary_expression
+                (member_expression
+                  (identifier)
+                  (identifier))
+                (integer))))
+          (in_expression
+            (string_identifier)
+            (range
+              (integer)
+              (integer))))
+        (in_expression
+          (string_identifier)
+          (range
+            (integer)
+            (filesize)))))))
+
+============================================================
+Of with sets
+============================================================
+
+rule C { condition: 2 of ($a, $b, $c) and any of ($x*) and all of them and none of ($*) and 50% of them and 3 of ($a*, $b*) in (1000..2000) and any of ($a*) at 0 }
+
+---
+
+(source_file
+  (rule_definition
+    (identifier)
+    (condition_section
+      (binary_expression
+        (binary_expression
+          (binary_expression
+            (binary_expression
+              (binary_expression
+                (binary_expression
+                  (of_expression
+                    (quantifier
+                      (integer))
+                    (string_set
+                      (string_identifier)
+                      (string_identifier)
+                      (string_identifier)))
+                  (of_expression
+                    (quantifier)
+                    (string_set
+                      (string_wildcard))))
+                (of_expression
+                  (quantifier)
+                  (them)))
+              (of_expression
+                (quantifier)
+                (string_set
+                  (string_wildcard))))
+            (of_expression
+              (quantifier
+                (integer))
+              (them)))
+          (of_expression
+            (quantifier
+              (integer))
+            (string_set
+              (string_wildcard)
+              (string_wildcard))
+            (range
+              (integer)
+              (integer))))
+        (of_expression
+          (quantifier)
+          (string_set
+            (string_wildcard))
+          (integer))))))
+
+============================================================
+Of with rule sets
+============================================================
+
+rule C { condition: any of (RuleA, Rule*) and 1 of (a*) }
+
+---
+
+(source_file
+  (rule_definition
+    (identifier)
+    (condition_section
+      (binary_expression
+        (of_expression
+          (quantifier)
+          (rule_set
+            (identifier)
+            (rule_wildcard)))
+        (of_expression
+          (quantifier
+            (integer))
+          (rule_set
+            (rule_wildcard)))))))
+
+============================================================
+For over strings
+============================================================
+
+rule C { condition: for any of ($a, $b) : ( $ at pe.entry_point ) and for all of them : ( # > 3 ) and for 2 of ($x*) : ( @ < 100 and ! > 4 ) }
+
+---
+
+(source_file
+  (rule_definition
+    (identifier)
+    (condition_section
+      (binary_expression
+        (binary_expression
+          (for_expression
+            (quantifier)
+            (string_set
+              (string_identifier)
+              (string_identifier))
+            (at_expression
+              (string_identifier)
+              (member_expression
+                (identifier)
+                (identifier))))
+          (for_expression
+            (quantifier)
+            (them)
+            (binary_expression
+              (string_count)
+              (integer))))
+        (for_expression
+          (quantifier
+            (integer))
+          (string_set
+            (string_wildcard))
+          (binary_expression
+            (binary_expression
+              (string_offset)
+              (integer))
+            (binary_expression
+              (string_length)
+              (integer))))))))
+
+============================================================
+For over ranges, enumerations and iterables
+============================================================
+
+rule C {
+  condition:
+    for all i in (1..3) : ( @a[i] + 10 == @b[i] ) and
+    for any i in (1..#a) : ( @a[i] < 100 ) and
+    for any section in pe.sections : ( section.name == ".text" ) and
+    for any k, v in some_dict : ( k == "foo" and v == "bar" ) and
+    for any s in ("a", "b") : ( pe.imphash() == s )
+}
+
+---
+
+(source_file
+  (rule_definition
+    (identifier)
+    (condition_section
+      (binary_expression
+        (binary_expression
+          (binary_expression
+            (binary_expression
+              (for_expression
+                (quantifier)
+                (identifier)
+                (range
+                  (integer)
+                  (integer))
+                (binary_expression
+                  (binary_expression
+                    (index_expression
+                      (string_offset)
+                      (identifier))
+                    (integer))
+                  (index_expression
+                    (string_offset)
+                    (identifier))))
+              (for_expression
+                (quantifier)
+                (identifier)
+                (range
+                  (integer)
+                  (string_count))
+                (binary_expression
+                  (index_expression
+                    (string_offset)
+                    (identifier))
+                  (integer))))
+            (for_expression
+              (quantifier)
+              (identifier)
+              (member_expression
+                (identifier)
+                (identifier))
+              (binary_expression
+                (member_expression
+                  (identifier)
+                  (identifier))
+                (string))))
+          (for_expression
+            (quantifier)
+            (identifier)
+            (identifier)
+            (identifier)
+            (binary_expression
+              (binary_expression
+                (identifier)
+                (string))
+              (binary_expression
+                (identifier)
+                (string)))))
+        (for_expression
+          (quantifier)
+          (identifier)
+          (enumeration
+            (string)
+            (string))
+          (binary_expression
+            (call_expression
+              (member_expression
+                (identifier)
+                (identifier)))
+            (identifier)))))))
+
+============================================================
+Modules, functions and integer reads
+============================================================
+
+import "pe"
+import "math"
+rule C { condition: uint16(0) == 0x5A4D and uint32(uint32(0x3C)) == 0x00004550 and int8be(1) < 0 and pe.sections[0].name == ".text" and pe.exports("Install") and math.entropy(0, filesize) >= 7.0 and pe.version_info["CompanyName"] contains "Corp" }
+
+---
+
+(source_file
+  (import_statement
+    (string))
+  (import_statement
+    (string))
+  (rule_definition
+    (identifier)
+    (condition_section
+      (binary_expression
+        (binary_expression
+          (binary_expression
+            (binary_expression
+              (binary_expression
+                (binary_expression
+                  (binary_expression
+                    (call_expression
+                      (identifier)
+                      (arguments
+                        (integer)))
+                    (integer))
+                  (binary_expression
+                    (call_expression
+                      (identifier)
+                      (arguments
+                        (call_expression
+                          (identifier)
+                          (arguments
+                            (integer)))))
+                    (integer)))
+                (binary_expression
+                  (call_expression
+                    (identifier)
+                    (arguments
+                      (integer)))
+                  (integer)))
+              (binary_expression
+                (member_expression
+                  (index_expression
+                    (member_expression
+                      (identifier)
+                      (identifier))
+                    (integer))
+                  (identifier))
+                (string)))
+            (call_expression
+              (member_expression
+                (identifier)
+                (identifier))
+              (arguments
+                (string))))
+          (binary_expression
+            (call_expression
+              (member_expression
+                (identifier)
+                (identifier))
+              (arguments
+                (integer)
+                (filesize)))
+            (float)))
+        (binary_expression
+          (index_expression
+            (member_expression
+              (identifier)
+              (identifier))
+            (string))
+          (string))))))
+
+============================================================
+String operators
+============================================================
+
+rule C { condition: ext_var contains "a" and pe.pdb_path icontains "x" and a startswith "b" and a istartswith "c" and a endswith "d" and a iendswith "e" and a iequals "f" and ext_var matches /[a-z]+/is }
+
+---
+
+(source_file
+  (rule_definition
+    (identifier)
+    (condition_section
+      (binary_expression
+        (binary_expression
+          (binary_expression
+            (binary_expression
+              (binary_expression
+                (binary_expression
+                  (binary_expression
+                    (binary_expression
+                      (identifier)
+                      (string))
+                    (binary_expression
+                      (member_expression
+                        (identifier)
+                        (identifier))
+                      (string)))
+                  (binary_expression
+                    (identifier)
+                    (string)))
+                (binary_expression
+                  (identifier)
+                  (string)))
+              (binary_expression
+                (identifier)
+                (string)))
+            (binary_expression
+              (identifier)
+              (string)))
+          (binary_expression
+            (identifier)
+            (string)))
+        (binary_expression
+          (identifier)
+          (regex))))))
+
+============================================================
+Rule references, entrypoint and with
+============================================================
+
+rule A { condition: true }
+rule B { condition: A and $a at entrypoint and with x = filesize, y = 2 : ( x > y ) }
+
+---
+
+(source_file
+  (rule_definition
+    (identifier)
+    (condition_section
+      (boolean)))
+  (rule_definition
+    (identifier)
+    (condition_section
+      (binary_expression
+        (binary_expression
+          (identifier)
+          (at_expression
+            (string_identifier)
+            (entrypoint)))
+        (with_expression
+          (with_declaration
+            (identifier)
+            (filesize))
+          (with_declaration
+            (identifier)
+            (integer))
+          (binary_expression
+            (identifier)
+            (identifier)))))))

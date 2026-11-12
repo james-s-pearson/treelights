@@ -1,0 +1,11 @@
+{
+  "name": "tree-sitter-yara",
+  "version": "0.1.0",
+  "description": "YARA grammar for tree-sitter",
+  "license": "MIT",
+  "author": "James Pearson",
+  "private": true,
+  "keywords": ["tree-sitter", "yara", "parser"],
+  "files": ["grammar.js", "tree-sitter.json", "queries/*", "src/**"],
+  "tree-sitter": [{ "scope": "source.yara", "file-types": ["yar", "yara"], "highlights": "queries/highlights.scm" }]
+}

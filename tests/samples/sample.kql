@@ -1,0 +1,13 @@
+// Sign-ins from new countries followed by a new inbox rule
+let lookback = 7d;
+SigninLogs
+| where TimeGenerated > ago(lookback)
+| where ResultType == 0 and Location !in ("US", "CA")
+| summarize Countries = make_set(Location), Count = count() by UserPrincipalName
+| join kind=inner (
+    OfficeActivity
+    | where Operation == "New-InboxRule"
+  ) on $left.UserPrincipalName == $right.UserId
+| project UserPrincipalName, Countries, Count
+| order by Count desc
+| take 10

@@ -1,0 +1,161 @@
+{
+  "name": "Follow Obsidian theme",
+  "type": "any",
+  "source": "Treelights (tools/make-themes.mjs)",
+  "captures": {
+    "variable": {
+      "fg": "var(--code-normal)"
+    },
+    "variable.builtin": {
+      "fg": "var(--code-tag)"
+    },
+    "variable.parameter": {
+      "fg": "var(--code-property)"
+    },
+    "variable.member": {
+      "fg": "var(--code-property)"
+    },
+    "property": {
+      "fg": "var(--code-property)"
+    },
+    "constant": {
+      "fg": "var(--code-value)"
+    },
+    "constant.builtin": {
+      "fg": "var(--code-tag)"
+    },
+    "boolean": {
+      "fg": "var(--code-value)"
+    },
+    "number": {
+      "fg": "var(--code-value)"
+    },
+    "string": {
+      "fg": "var(--code-string)"
+    },
+    "character": {
+      "fg": "var(--code-string)"
+    },
+    "string.escape": {
+      "fg": "var(--code-important)"
+    },
+    "string.regexp": {
+      "fg": "var(--code-important)"
+    },
+    "string.special": {
+      "fg": "var(--code-important)"
+    },
+    "character.special": {
+      "fg": "var(--code-important)"
+    },
+    "keyword": {
+      "fg": "var(--code-keyword)"
+    },
+    "keyword.operator": {
+      "fg": "var(--code-keyword)"
+    },
+    "function": {
+      "fg": "var(--code-function)"
+    },
+    "function.builtin": {
+      "fg": "var(--code-function)"
+    },
+    "constructor": {
+      "fg": "var(--code-function)"
+    },
+    "type": {
+      "fg": "var(--code-function)"
+    },
+    "type.builtin": {
+      "fg": "var(--code-function)"
+    },
+    "module": {
+      "fg": "var(--code-function)"
+    },
+    "module.builtin": {
+      "fg": "var(--code-tag)"
+    },
+    "attribute": {
+      "fg": "var(--code-property)"
+    },
+    "label": {
+      "fg": "var(--code-function)"
+    },
+    "operator": {
+      "fg": "var(--code-operator)"
+    },
+    "punctuation": {
+      "fg": "var(--code-punctuation)"
+    },
+    "punctuation.special": {
+      "fg": "var(--code-keyword)"
+    },
+    "comment": {
+      "fg": "var(--code-comment)",
+      "italic": true
+    },
+    "comment.error": {
+      "fg": "var(--code-tag)"
+    },
+    "comment.warning": {
+      "fg": "var(--code-property)"
+    },
+    "comment.todo": {
+      "fg": "var(--code-function)"
+    },
+    "comment.note": {
+      "fg": "var(--code-function)"
+    },
+    "tag": {
+      "fg": "var(--code-tag)"
+    },
+    "tag.attribute": {
+      "fg": "var(--code-property)"
+    },
+    "tag.delimiter": {
+      "fg": "var(--code-punctuation)"
+    },
+    "markup.heading": {
+      "fg": "var(--code-value)",
+      "bold": true
+    },
+    "markup.strong": {
+      "bold": true
+    },
+    "markup.italic": {
+      "italic": true
+    },
+    "markup.strikethrough": {
+      "strikethrough": true
+    },
+    "markup.link": {
+      "fg": "var(--code-function)",
+      "underline": true
+    },
+    "markup.link.label": {
+      "fg": "var(--code-function)"
+    },
+    "markup.raw": {
+      "fg": "var(--code-string)"
+    },
+    "markup.list": {
+      "fg": "var(--code-keyword)"
+    },
+    "markup.quote": {
+      "fg": "var(--code-comment)",
+      "italic": true
+    },
+    "diff.plus": {
+      "fg": "var(--code-string)"
+    },
+    "diff.minus": {
+      "fg": "var(--code-tag)"
+    },
+    "diff.delta": {
+      "fg": "var(--code-property)"
+    },
+    "error": {
+      "fg": "var(--code-tag)"
+    }
+  }
+}

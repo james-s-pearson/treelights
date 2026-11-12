@@ -1,0 +1,12 @@
+diff --git a/scan.py b/scan.py
+index 3b18e51..a9c2f04 100644
+--- a/scan.py
++++ b/scan.py
+@@ -1,5 +1,6 @@
+ import socket
+-TIMEOUT = 0.5
++TIMEOUT = 1.0
++RETRIES = 3
+
+ def scan(host):
+     pass

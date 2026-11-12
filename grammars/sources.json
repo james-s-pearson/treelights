@@ -1,0 +1,172 @@
+{
+  "_note": "Every revision is a full commit hash (a tag can be moved). Grammars that nvim-treesitter supports are pinned to its revisions (main branch, commit f603a2f) so the highlight queries match. See SECURITY.md.",
+  "grammars": {
+    "lua": {
+      "url": "https://github.com/tree-sitter-grammars/tree-sitter-lua",
+      "revision": "10fe0054734eec83049514ea2e718b2a56acd0c9"
+    },
+    "luadoc": {
+      "url": "https://github.com/tree-sitter-grammars/tree-sitter-luadoc",
+      "revision": "4d04632a3a398b78af52e83be074883e722f40be"
+    },
+    "luap": {
+      "url": "https://github.com/tree-sitter-grammars/tree-sitter-luap",
+      "revision": "c134aaec6acf4fa95fe4aa0dc9aba3eacdbbe55a"
+    },
+    "vim": {
+      "url": "https://github.com/tree-sitter-grammars/tree-sitter-vim",
+      "revision": "039c8d0aa1deae00ddeb0374dd70bcc0ec56938d",
+      "splitLexer": 8,
+      "_note": "Lexer split into 8 functions at build time (grammars/split-lexer.mjs): one 800 KB function crashed Obsidian's V8 13.8 optimising compiler."
+    },
+    "printf": {
+      "url": "https://github.com/tree-sitter-grammars/tree-sitter-printf",
+      "revision": "ec4e5674573d5554fccb87a887c97d4aec489da7"
+    },
+    "regex": {
+      "url": "https://github.com/tree-sitter/tree-sitter-regex",
+      "revision": "b2ac15e27fce703d2f37a79ccd94a5c0cbe9720b"
+    },
+    "comment": {
+      "url": "https://github.com/stsewd/tree-sitter-comment",
+      "revision": "66272d2b6c73fb61157541b69dd0a7ce7b42a5ad"
+    },
+    "python": {
+      "url": "https://github.com/tree-sitter/tree-sitter-python",
+      "revision": "293fdc02038ee2bf0e2e206711b69c90ac0d413f"
+    },
+    "javascript": {
+      "url": "https://github.com/tree-sitter/tree-sitter-javascript",
+      "revision": "58404d8cf191d69f2674a8fd507bd5776f46cb11"
+    },
+    "typescript": {
+      "url": "https://github.com/tree-sitter/tree-sitter-typescript",
+      "revision": "75b3874edb2dc714fb1fd77a32013d0f8699989f",
+      "location": "typescript"
+    },
+    "tsx": {
+      "url": "https://github.com/tree-sitter/tree-sitter-typescript",
+      "revision": "75b3874edb2dc714fb1fd77a32013d0f8699989f",
+      "location": "tsx"
+    },
+    "bash": {
+      "url": "https://github.com/tree-sitter/tree-sitter-bash",
+      "revision": "a06c2e4415e9bc0346c6b86d401879ffb44058f7"
+    },
+    "c": {
+      "url": "https://github.com/tree-sitter/tree-sitter-c",
+      "revision": "b780e47fc780ddc8da13afa35a3f4ed5c157823d"
+    },
+    "json": {
+      "url": "https://github.com/tree-sitter/tree-sitter-json",
+      "revision": "254c42a6476413b776221e03982ac8ae159eeb72"
+    },
+    "markdown": {
+      "url": "https://github.com/tree-sitter-grammars/tree-sitter-markdown",
+      "revision": "a0a00f817d02412bd92c54d316f164d827b57b5c",
+      "location": "tree-sitter-markdown"
+    },
+    "markdown_inline": {
+      "url": "https://github.com/tree-sitter-grammars/tree-sitter-markdown",
+      "revision": "a0a00f817d02412bd92c54d316f164d827b57b5c",
+      "location": "tree-sitter-markdown-inline"
+    },
+    "query": {
+      "url": "https://github.com/tree-sitter-grammars/tree-sitter-query",
+      "revision": "8e9e223812ff30854fbc912adbec696ba5f0e023"
+    },
+    "yaml": {
+      "url": "https://github.com/tree-sitter-grammars/tree-sitter-yaml",
+      "revision": "a1c4812a73ec5e089de8e441fdea3a921e8d5079"
+    },
+    "toml": {
+      "url": "https://github.com/tree-sitter-grammars/tree-sitter-toml",
+      "revision": "64b56832c2cffe41758f28e05c756a3a98d16f41"
+    },
+    "html": {
+      "url": "https://github.com/tree-sitter/tree-sitter-html",
+      "revision": "73a3947324f6efddf9e17c0ea58d454843590cc0"
+    },
+    "css": {
+      "url": "https://github.com/tree-sitter/tree-sitter-css",
+      "revision": "dda5cfc5722c429eaba1c910ca32c2c0c5bb1a3f"
+    },
+    "json5": {
+      "url": "https://github.com/Joakker/tree-sitter-json5",
+      "revision": "248b8564567087d7866be76569b182f6dd7e14e9"
+    },
+    "diff": {
+      "url": "https://github.com/tree-sitter-grammars/tree-sitter-diff",
+      "revision": "ada384ac7bfc1307f32de474620120add29998fb"
+    },
+    "git_config": {
+      "url": "https://github.com/the-mikedavis/tree-sitter-git-config",
+      "revision": "3a61756a81a86291a0f48e3eeeaa0692b9981aa9"
+    },
+    "gitignore": {
+      "url": "https://github.com/shunsambongi/tree-sitter-gitignore",
+      "revision": "f4685bf11ac466dd278449bcfe5fd014e94aa504"
+    },
+    "gitattributes": {
+      "url": "https://github.com/tree-sitter-grammars/tree-sitter-gitattributes",
+      "revision": "1b7af09d45b579f9f288453b95ad555f1f431645"
+    },
+    "ini": {
+      "url": "https://github.com/justinmk/tree-sitter-ini",
+      "revision": "e4018b5176132b4f3c5d6e61cea383f42288d0f5"
+    },
+    "sql": {
+      "url": "https://github.com/derekstride/tree-sitter-sql",
+      "revision": "39fdb006403747241244326e8af3b3e96b85381c"
+    },
+    "powershell": {
+      "url": "https://github.com/airbus-cert/tree-sitter-powershell",
+      "revision": "e7bd348c49fdfd5c853a146a670965ba516a6239"
+    },
+    "dockerfile": {
+      "url": "https://github.com/camdencheek/tree-sitter-dockerfile",
+      "revision": "971acdd908568b4531b0ba28a445bf0bb720aba5"
+    },
+    "hcl": {
+      "url": "https://github.com/tree-sitter-grammars/tree-sitter-hcl",
+      "revision": "64ad62785d442eb4d45df3a1764962dafd5bc98b"
+    },
+    "terraform": {
+      "url": "https://github.com/tree-sitter-grammars/tree-sitter-hcl",
+      "revision": "64ad62785d442eb4d45df3a1764962dafd5bc98b",
+      "location": "dialects/terraform"
+    },
+    "xml": {
+      "url": "https://github.com/tree-sitter-grammars/tree-sitter-xml",
+      "revision": "5000ae8f22d11fbe93939b05c1e37cf21117162d",
+      "location": "xml"
+    },
+    "dtd": {
+      "url": "https://github.com/tree-sitter-grammars/tree-sitter-xml",
+      "revision": "5000ae8f22d11fbe93939b05c1e37cf21117162d",
+      "location": "dtd"
+    },
+    "java": {
+      "url": "https://github.com/tree-sitter/tree-sitter-java",
+      "revision": "e10607b45ff745f5f876bfa3e94fbcc6b44bdc11"
+    },
+    "cpp": {
+      "url": "https://github.com/tree-sitter/tree-sitter-cpp",
+      "revision": "c009222808634c1014f82438d4883753516a2c24"
+    },
+    "kusto": {
+      "url": "https://github.com/Willem-J-an/tree-sitter-kusto",
+      "revision": "8353a1296607d6ba33db7c7e312226e5fc83e8ce",
+      "patch": "grammars/patches/kusto.json",
+      "_note": "Patched at build time (grammars/patches/kusto.json): adds take, limit, top, count and other common operators missing from this 2023 grammar."
+    },
+    "rego": {
+      "url": "https://github.com/FallenAngel97/tree-sitter-rego",
+      "revision": "da2a1f63cd877efb05d56de61fe516e90012b9a7"
+    },
+    "yara": {
+      "path": "grammars/tree-sitter-yara",
+      "_note": "Written for Treelights (MIT). Not in nvim-treesitter."
+    }
+  }
+}

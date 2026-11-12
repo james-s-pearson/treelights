@@ -1,0 +1,160 @@
+============================================================
+Minimal rule
+============================================================
+
+rule Empty { condition: true }
+
+---
+
+(source_file
+  (rule_definition
+    (identifier)
+    (condition_section
+      (boolean))))
+
+============================================================
+Rule modifiers and tags
+============================================================
+
+private global rule Tagged : apt loader windows { condition: false }
+
+---
+
+(source_file
+  (rule_definition
+    (rule_modifier)
+    (rule_modifier)
+    (identifier)
+    (tag_list
+      (tag)
+      (tag)
+      (tag))
+    (condition_section
+      (boolean))))
+
+============================================================
+Imports and includes
+============================================================
+
+import "pe"
+import "math"
+include "../common/other.yar"
+include "c:\\yara\\x.yar"
+
+rule R { condition: true }
+
+---
+
+(source_file
+  (import_statement
+    (string))
+  (import_statement
+    (string))
+  (include_statement
+    (string))
+  (include_statement
+    (string
+      (escape_sequence)
+      (escape_sequence)))
+  (rule_definition
+    (identifier)
+    (condition_section
+      (boolean))))
+
+============================================================
+Comments everywhere
+============================================================
+
+// line comment
+/* block
+   comment */
+rule R // after name
+{
+  /* meta */ meta:
+    a = 1 // trailing
+  condition:
+    true /* end */
+}
+
+---
+
+(source_file
+  (comment)
+  (comment)
+  (rule_definition
+    (identifier)
+    (comment)
+    (comment)
+    (meta_section
+      (meta_definition
+        (identifier)
+        (integer)))
+    (comment)
+    (condition_section
+      (boolean))
+    (comment)))
+
+============================================================
+Meta values
+============================================================
+
+rule M {
+  meta:
+    author = "Analyst"
+    score = 75
+    offset = -1
+    hex = 0x10
+    active = true
+    draft = false
+  condition:
+    true
+}
+
+---
+
+(source_file
+  (rule_definition
+    (identifier)
+    (meta_section
+      (meta_definition
+        (identifier)
+        (string))
+      (meta_definition
+        (identifier)
+        (integer))
+      (meta_definition
+        (identifier)
+        (negative_integer
+          (integer)))
+      (meta_definition
+        (identifier)
+        (integer))
+      (meta_definition
+        (identifier)
+        (boolean))
+      (meta_definition
+        (identifier)
+        (boolean)))
+    (condition_section
+      (boolean))))
+
+============================================================
+Empty meta and strings sections
+============================================================
+
+rule E {
+  meta:
+  strings:
+  condition:
+    true
+}
+
+---
+
+(source_file
+  (rule_definition
+    (identifier)
+    (meta_section)
+    (strings_section)
+    (condition_section
+      (boolean))))

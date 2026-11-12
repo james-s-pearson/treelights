@@ -1,0 +1,17 @@
+# TOML sample for Treelights tests.
+title = "Treelights sample"
+version = 2
+ratio = 0.75
+enabled = true
+released = 2026-11-11T20:00:00Z
+ports = [22, 80, 443]
+
+[owner]
+name = "Example"
+tags = { team = "blue", level = 3 }
+
+[[targets]]
+host = "10.0.0.1"
+notes = '''
+multi-line literal
+'''

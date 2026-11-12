@@ -1,0 +1,22 @@
+# YAML sample for Treelights tests.
+name: scan-pipeline
+on:
+  push:
+    branches: [main, "release/*"]
+env:
+  RETRIES: 3
+  VERBOSE: true
+  RATIO: 0.75
+  EMPTY: null
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run scanner
+        run: |
+          nmap -sV -p 22,80 10.0.0.1
+      - &defaults
+        timeout: 30
+      - <<: *defaults
+        name: "Report"

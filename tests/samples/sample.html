@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<!-- HTML sample for Treelights tests. -->
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Findings</title>
+  </head>
+  <body class="report">
+    <h1 id="top">Scan results</h1>
+    <ul>
+      <li><a href="https://example.com/finding?id=1&amp;sev=high">Finding 1</a></li>
+      <li data-severity="low">Finding 2</li>
+    </ul>
+    <input type="checkbox" checked disabled>
+    <script>
+      const total = document.querySelectorAll("li").length;
+      console.log(`found ${total}`);
+    </script>
+  </body>
+</html>
