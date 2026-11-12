@@ -1,7 +1,5 @@
 # Treelights
 
-> **Status: draft.** Version 1.0.0, not yet released.
-
 ![Treelights with the tokyonight-moon code theme](images/01-treelights-demo.png)
 
 Accurate syntax highlighting for code blocks in [Obsidian](https://obsidian.md),
@@ -73,7 +71,7 @@ how the build is checked.
 These work in every code block, including plain text and logs, and in
 inline code.
 
-![Security badges with a hover label](images/02-security-features.png)
+![Hovering each security badge shows what it is](images/02-security-features.gif)
 
 **Extra rules**
 

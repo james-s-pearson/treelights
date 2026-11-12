@@ -1,7 +1,5 @@
 # tree-sitter-yara
 
-Status: draft.
-
 A [Tree-sitter](https://tree-sitter.github.io/) grammar for the
 [YARA](https://virustotal.github.io/yara/) rule language, with highlight
 queries in nvim-treesitter's capture style. It was written for
