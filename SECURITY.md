@@ -19,8 +19,13 @@ many open-source projects it depends on.
   theme reads only the file you pick.
 - **Language grammars are sealed off.** Each grammar runs as WebAssembly,
   which can use only its own memory. A build check makes sure no grammar
-  can ask Treelights for anything beyond memory and text helpers (see
-  below), so a grammar cannot reach your files, the network or the page.
+  can ask Treelights for anything beyond memory and text helpers, and
+  that none carries JavaScript of its own (see below), so a grammar
+  cannot reach your files, the network or the page.
+- **No code that could fetch, read files or run text as code.** The
+  plugin file (`main.js`) contains no download, file-system or `eval`
+  code; the runtime's unused paths for those are removed at build time,
+  and a test checks the built file.
 - **Everything is pinned and fingerprinted.** Every outside source is
   fixed to an exact version, and every compiled grammar must match a
   recorded SHA-256 fingerprint, or the build stops.
@@ -38,10 +43,11 @@ many open-source projects it depends on.
 - highlight queries and themes (text data, not code)
 
 Treelights gives web-tree-sitter every grammar as bytes from inside
-`main.js`. The runtime's ability to download files is never used, and
-its code for reading files when run under Node.js is removed from
-`main.js` at build time (see "Changes to upstream code" below), so the
-plugin contains no file-system access.
+`main.js`. The runtime's code for downloading files, for reading files
+under Node.js and for running JavaScript embedded in a grammar (with
+`eval`) is never needed, so it is removed from `main.js` at build time
+(see "Changes to upstream code" below). The plugin contains no network,
+file-system or `eval` code.
 
 ### On the developer's computer (building Treelights)
 
@@ -65,7 +71,8 @@ JavaScript.
 2. **Import allow-list.** `tools/supply-chain.mjs` lists the only
    functions a grammar may ask for: memory, character checks, string
    helpers and assertions. A grammar asking for anything else stops the
-   build.
+   build, and so does a grammar carrying embedded JavaScript (Emscripten
+   `EM_ASM` or `EM_JS`), which the runtime's loader would otherwise run.
 3. **Fingerprints.** `grammars/checksums.json` holds the SHA-256 of every
    compiled grammar, of the `tree-sitter` program and of the WASI SDK.
    The grammar build and the plugin build both stop on any difference.
@@ -105,14 +112,20 @@ JavaScript.
      `limit`, `top` and `count` (`grammars/patches/kusto.json`). The
      patch is applied to the grammar's JSON form and the parser is
      regenerated from it, so none of the grammar's own JavaScript runs.
-   - web-tree-sitter's Node.js branch, which reads files with Node's
-     `fs` module, is removed from the bundled copy (`esbuild.config.mjs`).
-     Obsidian never takes that branch; removing it means `main.js` holds
-     no file-system code. The build stops if the runtime's code no
-     longer matches what is removed.
+   - In the bundled copy of web-tree-sitter (`esbuild.config.mjs`),
+     three kinds of code that Treelights never uses are replaced with an
+     error: the Node.js branch that reads files with Node's `fs` module;
+     loading a grammar or the runtime from a web address (Treelights
+     always passes bytes); and running a grammar's embedded JavaScript
+     with `eval`. Each replacement must match the expected number of
+     places, and the build then checks that no `fetch`,
+     `XMLHttpRequest`, `fs` or `eval` remains; otherwise it stops, so a
+     changed runtime is reviewed first.
 8. **Tests.** `npm test` checks the pins, the fingerprints and the
-   allow-list, and proves that a changed or over-reaching grammar is
-   caught.
+   allow-list, proves that a changed or over-reaching grammar (or one
+   carrying JavaScript) is caught, and checks that the built `main.js`
+   has no network, file-system or `eval` code apart from the one
+   Cmd-click link.
 
 ## Releases
 

@@ -3,4 +3,3 @@ build/
 main.js
 *.wasm
 .DS_Store
-src/generated/

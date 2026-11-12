@@ -1,7 +1,7 @@
 // Treelights: Tree-sitter highlighting for Obsidian code blocks.
 
 import * as obsidian from "obsidian";
-import { Notice, Platform, Plugin, PluginSettingTab, Setting, setTooltip, type App, type MarkdownPostProcessorContext } from "obsidian";
+import { Notice, Platform, Plugin, PluginSettingTab, setTooltip, type App, type MarkdownPostProcessorContext, type SettingDefinition, type SettingDefinitionItem } from "obsidian";
 import { RangeSetBuilder, StateEffect, type Extension } from "@codemirror/state";
 import { Decoration, type DecorationSet, EditorView, ViewPlugin, type ViewUpdate } from "@codemirror/view";
 import { Language, Parser, Query } from "web-tree-sitter";
@@ -156,6 +156,9 @@ export default class TreelightsPlugin extends Plugin {
       if (!asset) { this.languages.set(name, undefined); return; }
       const language = await Language.load(await inflate(asset.wasm));
       this.languages.set(name, this.buildEntry(name, language));
+      // Results cached before this grammar arrived (for example Lua drawn
+      // before the Vim grammar inside it had loaded) are now incomplete.
+      this.cache.clear();
     }
     // injected languages named in this language's injection queries
     const inj = grammars[name]?.injections ?? "";
@@ -317,7 +320,7 @@ export default class TreelightsPlugin extends Plugin {
       props["--code-normal"] = theme.foreground ?? "inherit";
     }
     for (const [key, cls] of this.styleClasses) {
-      const s: Style = JSON.parse(key);
+      const s = JSON.parse(key) as Style;
       const n = cls.split(" ")[0].slice(3); // "tl-12 tl-chip" -> "12"
       const set = (name: string, value: string | false | undefined) => { if (value) props[`--tl-${n}-${name}`] = value; };
       set("c", s.fg ?? "inherit");
@@ -735,101 +738,154 @@ const INTERNAL_GRAMMARS = new Set(["comment", "luadoc", "luap", "printf", "regex
 class TreelightsSettingTab extends PluginSettingTab {
   constructor(app: App, private plugin: TreelightsPlugin) { super(app, plugin); }
 
-  display() {
-    const { containerEl } = this;
-    containerEl.empty();
+  // Settings are declared as data (Obsidian 1.13+), so each one appears in
+  // Obsidian's settings search. Rows with custom behaviour use "render".
+  getSettingDefinitions(): SettingDefinitionItem[] {
     const s = this.plugin.settings;
     const custom = new Set(s.customThemes.map((t) => t.name));
     const themes = [...BUILT_IN_THEMES.filter((t) => !custom.has(t.name)), ...s.customThemes];
-    const pick = (name: string, desc: string, key: "darkTheme" | "lightTheme") =>
-      new Setting(containerEl).setName(name).setDesc(desc).addDropdown((d) => {
-        for (const t of themes) d.addOption(t.name, t.name);
-        d.setValue(s[key]).onChange(async (v) => { s[key] = v; await this.plugin.saveSettings(); });
-      });
-    pick("Dark theme", "Used when Obsidian is in dark mode.", "darkTheme");
-    pick("Light theme", "Used when Obsidian is in light mode.", "lightTheme");
-    new Setting(containerEl).setName("Use the theme's background")
-      .setDesc("Give code blocks the background colour of the code theme. (Follow Obsidian theme always keeps the Obsidian theme's background.)")
-      .addToggle((t) => t.setValue(s.useThemeBackground).onChange(async (v) => { s.useThemeBackground = v; await this.plugin.saveSettings(); }));
-    new Setting(containerEl).setName("Themes").setHeading();
-    new Setting(containerEl).setName("Import a Helix theme")
-      .setDesc("Choose a Helix theme file (.toml). Treelights reads its colours only; nothing in the file is run.")
-      .addButton((b) => b.setButtonText("Choose file").onClick(() => {
-        // Settings may be in its own window: the file picker must belong to
-        // the same window as the click, or the browser will not open it.
-        const doc = b.buttonEl.ownerDocument;
-        const input = doc.body.createEl("input", { type: "file", cls: "treelights-file-input", attr: { accept: ".toml" } });
-        input.onchange = async () => {
-          const file = input.files?.[0];
-          input.remove();
-          if (!file) return;
-          if (file.size > 256 * 1024) { new Notice("That file is too large to be a theme."); return; }
-          await this.plugin.importHelixTheme(file.name, await file.text());
-          this.display();
-        };
-        input.click();
-      }));
-    let vaultPath = "";
-    new Setting(containerEl).setName("Import from your vault")
-      .setDesc("Or put the .toml file in your vault and enter its path, for example themes/tokyonight.toml.")
-      .addText((t) => t.setPlaceholder("themes/name.toml").onChange((v) => { vaultPath = v.trim(); }))
-      .addButton((b) => b.setButtonText("Import").onClick(async () => {
-        if (!vaultPath.toLowerCase().endsWith(".toml")) { new Notice("Enter the path of a .toml file in your vault."); return; }
-        if (!(await this.app.vault.adapter.exists(vaultPath))) { new Notice(`No file at ${vaultPath}.`); return; }
-        const stat = await this.app.vault.adapter.stat(vaultPath);
-        if (stat && stat.size > 256 * 1024) { new Notice("That file is too large to be a theme."); return; }
-        await this.plugin.importHelixTheme(vaultPath.split("/").pop() ?? vaultPath, await this.app.vault.adapter.read(vaultPath));
-        this.display();
-      }));
-    for (const t of s.customThemes) {
-      new Setting(containerEl).setName(t.name).setDesc(`Imported Helix theme (${t.type}).`)
-        .addButton((b) => b.setButtonText("Remove").setDestructive().onClick(async () => {
-          await this.plugin.removeHelixTheme(t.name);
-          this.display();
-        }));
-    }
-    new Setting(containerEl).setName("Highlight rules").setHeading();
-    new Setting(containerEl).setName("LazyVim extras")
-      .setDesc("Extra highlight rules from LazyVim and snacks.nvim, for example `vim` shown as a built-in in Lua.")
-      .addToggle((t) => t.setValue(s.packs.includes("lazyvim")).onChange(async (v) => {
-        s.packs = v ? [...new Set([...s.packs, "lazyvim"])] : s.packs.filter((p) => p !== "lazyvim");
-        this.plugin.rebuildQueries();
-        await this.plugin.saveSettings(); // also redraws open notes
-      }));
+    const themeOptions = Object.fromEntries(themes.map((t) => [t.name, t.name]));
+    const tooLarge = 256 * 1024;
 
-    new Setting(containerEl).setName("Colour previews")
-      .setDesc("Show colour codes such as #ff6b1a, rgb() and hsl() on their own colour.")
-      .addToggle((t) => t.setValue(s.colourPreviews).onChange(async (v) => { s.colourPreviews = v; await this.plugin.saveSettings(); }));
-    new Setting(containerEl).setName("Security features")
-      .setDesc("Turn on security indicators, secret warnings and hidden-character checks together. Each can then be turned off below.")
-      .addToggle((t) => t.setValue(s.securityFeatures).onChange(async (v) => {
-        s.securityFeatures = v;
-        // turning the switch on with every feature off would do nothing
-        if (v && !s.securityIndicators && !s.secretWarnings && !s.hiddenCharacters) {
-          s.securityIndicators = s.secretWarnings = s.hiddenCharacters = true;
-        }
-        await this.plugin.saveSettings();
-        this.display(); // show or hide the three toggles
-      }));
-    if (s.securityFeatures) {
-      const sub = (name: string, description: string, key: "securityIndicators" | "secretWarnings" | "hiddenCharacters") =>
-        new Setting(containerEl).setName(name).setDesc(description).setClass("treelights-sub-setting")
+    const sub = (name: string, desc: string, key: "securityIndicators" | "secretWarnings" | "hiddenCharacters"): SettingDefinition => ({
+      name, desc, visible: () => s.securityFeatures,
+      render: (setting) => {
+        setting.setClass("treelights-sub-setting")
           .addToggle((t) => t.setValue(s[key]).onChange(async (v) => { s[key] = v; await this.plugin.saveSettings(); }));
-      sub("Security indicators", "Show indicators as alert badges: IP and MAC addresses, registry keys, file hashes and wallet addresses (red); URLs and domains, also defanged (blue); email addresses and file paths (green); CVE and CWE IDs (amber); MITRE ATT&CK IDs (magenta). Hover over one to see what it is. Cmd-click (Ctrl-click on Windows and Linux) a CVE, CWE or ATT&CK ID to open its page in your browser.", "securityIndicators");
-      sub("Secret warnings", "Flag credentials that should not be kept in notes: cloud and AI provider API keys, GitHub, GitLab and Slack tokens, JSON Web Tokens and private keys. Shown with yellow and black hazard stripes. Treelights only looks; nothing is sent anywhere.", "secretWarnings");
-      sub("Hidden characters", "Make invisible characters visible: zero-width characters, text-direction controls (as used in \"Trojan Source\" attacks), hidden tag text (used to smuggle instructions to AI tools) and look-alike letters from other alphabets inside a word, shown as cyan markers such as ⟨ZWSP⟩.", "hiddenCharacters");
-    }
+      },
+    });
 
-    new Setting(containerEl).setName("Languages").setHeading();
     const names = Object.keys(grammars).filter((g) => !INTERNAL_GRAMMARS.has(g)).sort();
     const aliasesOf = (g: string) => Object.entries(LANGUAGE_ALIASES).filter(([, to]) => to === g).map(([a]) => a);
-    const list = containerEl.createDiv({ cls: "treelights-language-list setting-item-description" });
-    list.createEl("p", { text: `${names.length} languages are built in. Use the name (or one of the other names in brackets) after the opening \`\`\` of a code block.` });
-    const ul = list.createEl("ul");
-    for (const g of names) {
-      const alt = aliasesOf(g);
-      ul.createEl("li", { text: alt.length ? `${g} (${alt.join(", ")})` : g });
+    const languageList = createFragment((f) => {
+      f.createEl("p", { text: "Use the name (or one of the other names in brackets) after the opening ``` of a code block." });
+      const ul = f.createEl("ul", { cls: "treelights-language-list" });
+      for (const g of names) {
+        const alt = aliasesOf(g);
+        ul.createEl("li", { text: alt.length ? `${g} (${alt.join(", ")})` : g });
+      }
+    });
+
+    return [
+      {
+        type: "group",
+        items: [
+          { name: "Dark theme", desc: "Used when Obsidian is in dark mode.", control: { type: "dropdown", key: "darkTheme", options: themeOptions } },
+          { name: "Light theme", desc: "Used when Obsidian is in light mode.", control: { type: "dropdown", key: "lightTheme", options: themeOptions } },
+          {
+            name: "Use the theme's background",
+            desc: "Give code blocks the background colour of the code theme. (Follow Obsidian theme always keeps the Obsidian theme's background.)",
+            control: { type: "toggle", key: "useThemeBackground" },
+          },
+        ],
+      },
+      {
+        type: "group",
+        heading: "Themes",
+        items: [
+          {
+            name: "Import a Helix theme",
+            desc: "Choose a Helix theme file (.toml). Treelights reads its colours only; nothing in the file is run.",
+            render: (setting) => {
+              setting.addButton((b) => b.setButtonText("Choose file").onClick(() => {
+                // Settings may be in its own window: the file picker must belong to
+                // the same window as the click, or the browser will not open it.
+                const doc = b.buttonEl.ownerDocument;
+                const input = doc.body.createEl("input", { type: "file", cls: "treelights-file-input", attr: { accept: ".toml" } });
+                input.onchange = async () => {
+                  const file = input.files?.[0];
+                  input.remove();
+                  if (!file) return;
+                  if (file.size > tooLarge) { new Notice("That file is too large to be a theme."); return; }
+                  await this.plugin.importHelixTheme(file.name, await file.text());
+                  this.update();
+                };
+                input.click();
+              }));
+            },
+          },
+          {
+            name: "Import from your vault",
+            desc: "Or put the .toml file in your vault and enter its path, for example themes/tokyonight.toml.",
+            render: (setting) => {
+              let vaultPath = "";
+              setting
+                .addText((t) => t.setPlaceholder("themes/name.toml").onChange((v) => { vaultPath = v.trim(); }))
+                .addButton((b) => b.setButtonText("Import").onClick(async () => {
+                  if (!vaultPath.toLowerCase().endsWith(".toml")) { new Notice("Enter the path of a .toml file in your vault."); return; }
+                  if (!(await this.app.vault.adapter.exists(vaultPath))) { new Notice(`No file at ${vaultPath}.`); return; }
+                  const stat = await this.app.vault.adapter.stat(vaultPath);
+                  if (stat && stat.size > tooLarge) { new Notice("That file is too large to be a theme."); return; }
+                  await this.plugin.importHelixTheme(vaultPath.split("/").pop() ?? vaultPath, await this.app.vault.adapter.read(vaultPath));
+                  this.update();
+                }));
+            },
+          },
+          ...s.customThemes.map((t): SettingDefinition => ({
+            name: t.name,
+            desc: `Imported Helix theme (${t.type}).`,
+            render: (setting) => {
+              setting.addButton((b) => b.setButtonText("Remove").setDestructive().onClick(async () => {
+                await this.plugin.removeHelixTheme(t.name);
+                this.update();
+              }));
+            },
+          })),
+        ],
+      },
+      {
+        type: "group",
+        heading: "Highlight rules",
+        items: [
+          {
+            name: "LazyVim extras",
+            desc: "Extra highlight rules from LazyVim and snacks.nvim, for example `vim` shown as a built-in in Lua.",
+            render: (setting) => {
+              setting.addToggle((t) => t.setValue(s.packs.includes("lazyvim")).onChange(async (v) => {
+                s.packs = v ? [...new Set([...s.packs, "lazyvim"])] : s.packs.filter((p) => p !== "lazyvim");
+                this.plugin.rebuildQueries();
+                await this.plugin.saveSettings(); // also redraws open notes
+              }));
+            },
+          },
+          {
+            name: "Colour previews",
+            desc: "Show colour codes such as #ff6b1a, rgb() and hsl() on their own colour.",
+            control: { type: "toggle", key: "colourPreviews" },
+          },
+          {
+            name: "Security features",
+            desc: "Turn on security indicators, secret warnings and hidden-character checks together. Each can then be turned off below.",
+            control: { type: "toggle", key: "securityFeatures" },
+          },
+          sub("Security indicators", "Show indicators as alert badges: IP and MAC addresses, registry keys, file hashes and wallet addresses (red); URLs and domains, also defanged (blue); email addresses and file paths (green); CVE and CWE IDs (amber); MITRE ATT&CK IDs (magenta). Hover over one to see what it is. Cmd-click (Ctrl-click on Windows and Linux) a CVE, CWE or ATT&CK ID to open its page in your browser.", "securityIndicators"),
+          sub("Secret warnings", "Flag credentials that should not be kept in notes: cloud and AI provider API keys, GitHub, GitLab and Slack tokens, JSON Web Tokens and private keys. Shown with yellow and black hazard stripes. Treelights only looks; nothing is sent anywhere.", "secretWarnings"),
+          sub("Hidden characters", "Make invisible characters visible: zero-width characters, text-direction controls (as used in \"Trojan Source\" attacks), hidden tag text (used to smuggle instructions to AI tools) and look-alike letters from other alphabets inside a word, shown as cyan markers such as ⟨ZWSP⟩.", "hiddenCharacters"),
+        ],
+      },
+      {
+        type: "group",
+        heading: "Languages",
+        items: [
+          { name: `${names.length} languages are built in`, desc: languageList, aliases: names.flatMap((g) => [g, ...aliasesOf(g)]) },
+        ],
+      },
+    ];
+  }
+
+  /** Save through the plugin, so a change redraws open notes at once. */
+  async setControlValue(key: string, value: unknown) {
+    const s = this.plugin.settings;
+    if (key === "securityFeatures") {
+      s.securityFeatures = value === true;
+      // turning the switch on with every feature off would do nothing
+      if (s.securityFeatures && !s.securityIndicators && !s.secretWarnings && !s.hiddenCharacters) {
+        s.securityIndicators = s.secretWarnings = s.hiddenCharacters = true;
+      }
+    } else {
+      (s as unknown as Record<string, unknown>)[key] = value;
     }
+    await this.plugin.saveSettings();
+    if (key === "securityFeatures") this.update(); // show or hide the three toggles
   }
 }
-

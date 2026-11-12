@@ -3,7 +3,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
-import { ALLOWED_IMPORTS, checkGrammars, checksumsFile, forbiddenImports, root } from "../tools/supply-chain.mjs";
+import { ALLOWED_IMPORTS, checkGrammars, checksumsFile, embeddedJavaScript, forbiddenImports, root } from "../tools/supply-chain.mjs";
 
 const wasmDir = path.join(root, "build/wasm");
 const built = fs.readdirSync(wasmDir).filter((f) => f.endsWith(".wasm")).map((f) => f.slice(0, -5));
@@ -14,6 +14,21 @@ const moduleImporting = (mod: string, name: string) => {
   const body = [1, ...str(mod), ...str(name), 0x00, 0x00]; // 1 import: function of type 0
   return new Uint8Array([0, 0x61, 0x73, 0x6d, 1, 0, 0, 0, 1, 4, 1, 0x60, 0, 0, 2, body.length, ...body]);
 };
+
+/** A tiny module with one exported function, optionally with a custom section. */
+const moduleExporting = (name: string, customSection?: string) => {
+  const str = (s: string) => [s.length, ...Buffer.from(s)];
+  const exp = [1, ...str(name), 0x00, 0x00];
+  const custom = customSection ? [0, str(customSection).length, ...str(customSection)] : [];
+  return new Uint8Array([0, 0x61, 0x73, 0x6d, 1, 0, 0, 0, 1, 4, 1, 0x60, 0, 0, 3, 2, 1, 0, 7, exp.length, ...exp, 10, 4, 1, 2, 0, 0x0b, ...custom]);
+};
+
+test("a grammar carrying embedded JavaScript is refused", async () => {
+  assert.deepEqual(await embeddedJavaScript(moduleExporting("tree_sitter_demo")), []);
+  assert.deepEqual(await embeddedJavaScript(moduleExporting("__em_js__steal")), ["__em_js__steal"]);
+  assert.deepEqual(await embeddedJavaScript(moduleExporting("__start_em_asm")), ["__start_em_asm"]);
+  assert.deepEqual(await embeddedJavaScript(moduleExporting("tree_sitter_demo", "em_js")), ["em_js section"]);
+});
 
 test("every grammar source is pinned to a full commit hash", () => {
   const { grammars } = JSON.parse(fs.readFileSync(path.join(root, "grammars/sources.json"), "utf8"));

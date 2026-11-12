@@ -23,19 +23,43 @@ const ctx = await esbuild.context({
     setup(build) {
       build.onResolve({ filter: /^(node:)?(fs|fs\/promises|module|path|url)$/ }, (a) => ({ path: a.path, namespace: "empty-node-module" }));
       build.onLoad({ filter: /.*/, namespace: "empty-node-module" }, () => ({ contents: "module.exports = {};", loader: "js" }));
-      // The runtime's Node branch also calls its own require("fs") etc.,
-      // which no bundler can see; remove those lines from the bundled copy.
-      // The build stops if the runtime's code no longer looks as expected.
+      // Code paths in the runtime that Treelights never uses are removed
+      // from the bundled copy, so main.js holds no file-system or network
+      // code:
+      // - the Node.js branch, which reads files with its own require("fs")
+      //   (no bundler can see those calls)
+      // - running JavaScript embedded in a grammar (with eval)
+      // - loading a grammar or the runtime from a web address; Treelights
+      //   always passes bytes (Parser.init({ wasmBinary }) and
+      //   Language.load(bytes)), so these paths are unreachable. They now
+      //   throw instead of downloading.
+      // Each swap must match exactly the expected number of times, or the
+      // build stops: a changed runtime has to be reviewed first.
       build.onLoad({ filter: /web-tree-sitter[\\/]web-tree-sitter\.js$/ }, async (a) => {
         let code = await fs.promises.readFile(a.path, "utf8");
         const swaps = [
-          ['var fs = require("fs");', "var fs = {}; // Node-only branch, never used in Obsidian"],
-          ['scriptDirectory = require("path").dirname(require("url").fileURLToPath(_scriptName)) + "/";', "scriptDirectory = \"\";"],
+          ['var fs = require("fs");', "var fs = {}; // Node-only branch, never used in Obsidian", 1],
+          ['scriptDirectory = require("path").dirname(require("url").fileURLToPath(_scriptName)) + "/";', "scriptDirectory = \"\";", 1],
+          ["await fetch(input)", "await treelightsNoNetwork(input)", 1],
+          ["new XMLHttpRequest()", "treelightsNoNetwork()", 2],
+          ["await fetch(url, {", "await treelightsNoNetwork(url, {", 1],
+          ["fetch(binaryFile, {", "treelightsNoNetwork(binaryFile, {", 1],
+          // A grammar's embedded JavaScript (EM_ASM / EM_JS) would be run
+          // with eval. No Treelights grammar has any (the supply-chain check
+          // refuses one that does), so these become errors instead.
+          ["ASM_CONSTS[start] = eval(func);", "ASM_CONSTS[start] = treelightsNoEval(func);", 1],
+          ["moduleExports[name] = eval(func);", "moduleExports[name] = treelightsNoEval(func);", 1],
         ];
-        for (const [from, to] of swaps) {
-          if (!code.includes(from)) throw new Error(`web-tree-sitter changed: "${from}" not found; review the Node branch before building`);
-          code = code.replace(from, to);
+        for (const [from, to, count] of swaps) {
+          const found = code.split(from).length - 1;
+          if (found !== count) throw new Error(`web-tree-sitter changed: "${from}" found ${found} times, expected ${count}; review the runtime before building`);
+          code = code.split(from).join(to);
         }
+        for (const pattern of [/\bfetch\(/, /XMLHttpRequest/, /require\("(fs|path|url)"\)/, /\beval\(/, /new Function\(/]) {
+          if (pattern.test(code)) throw new Error(`web-tree-sitter still contains ${pattern}; review the runtime before building`);
+        }
+        code = 'function treelightsNoNetwork() { throw new Error("Treelights loads everything from inside main.js; network loading is removed."); }\n'
+          + 'function treelightsNoEval() { throw new Error("Treelights does not run JavaScript embedded in a grammar."); }\n' + code;
         return { contents: code, loader: "js" };
       });
     },

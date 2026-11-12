@@ -41,7 +41,7 @@ async function load(name: string): Promise<LanguageEntry | undefined> {
 const names = fs.readdirSync(path.join(root, "build/wasm")).filter((f) => f.endsWith(".wasm")).map((f) => f.slice(0, -5));
 for (const n of names) cache.set(n, await load(n));
 
-const theme: Theme = JSON.parse(fs.readFileSync(themeFile, "utf8"));
+const theme = JSON.parse(fs.readFileSync(themeFile, "utf8")) as Theme;
 // keep the final newline: Neovim hands the parser complete lines
 const raw = fs.readFileSync(srcFile, "utf8");
 const text = raw.endsWith("\n") ? raw : raw + "\n";

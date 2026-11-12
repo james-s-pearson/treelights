@@ -3,7 +3,9 @@
 // - Every grammar source is pinned to a full commit hash.
 // - Every compiled grammar must match its SHA-256 fingerprint in
 //   grammars/checksums.json, and may ask the plugin only for the
-//   harmless functions in ALLOWED_IMPORTS (memory, character checks).
+//   harmless functions in ALLOWED_IMPORTS (memory, character checks),
+//   and may not carry embedded JavaScript (Emscripten EM_ASM / EM_JS),
+//   which the runtime's loader would otherwise run.
 // - The build tools that are downloaded at install time (the
 //   tree-sitter program and the WASI SDK it compiles with) must match
 //   their recorded fingerprints.
@@ -43,6 +45,16 @@ export async function forbiddenImports(wasmBytes) {
   return WebAssembly.Module.imports(mod)
     .filter((i) => i.module !== "env" || !ALLOWED_IMPORTS.has(i.name))
     .map((i) => `${i.module}.${i.name}`);
+}
+
+/** Embedded JavaScript a grammar carries (empty = none). The runtime's
+ * loader would run it with eval; Treelights' build removes that, and a
+ * grammar that carries any is refused outright. */
+export async function embeddedJavaScript(wasmBytes) {
+  const mod = await WebAssembly.compile(wasmBytes);
+  const exports = WebAssembly.Module.exports(mod).map((e) => e.name).filter((n) => /em_asm|em_js/i.test(n));
+  const sections = ["em_asm", "em_js"].filter((s) => WebAssembly.Module.customSections(mod, s).length);
+  return [...exports, ...sections.map((s) => `${s} section`)];
 }
 
 /** One fingerprint for a whole folder: every file's path and contents. */
@@ -101,6 +113,8 @@ export async function checkGrammars(langs, wasmDir, { update = false } = {}) {
     try { bad = await forbiddenImports(bytes); }
     catch (e) { problems.push(`${lang}: not a valid grammar file (${e.message})`); continue; }
     if (bad.length) problems.push(`${lang}: asks for functions outside the allow-list: ${bad.join(", ")}`);
+    const js = await embeddedJavaScript(bytes);
+    if (js.length) problems.push(`${lang}: carries embedded JavaScript: ${js.join(", ")}`);
     if (update) { (c.grammars ??= {})[lang] = { sha256: got }; continue; }
     const want = c.grammars?.[lang]?.sha256;
     if (!want) problems.push(`${lang}: no fingerprint recorded`);

@@ -1,5 +1,26 @@
 # Changelog
 
+## Unreleased
+
+Fixes and hardening after Obsidian's plugin review; colours are
+unchanged except for the fix below.
+
+- Fixed: in Live Preview, code inside code (for example Vim commands in
+  a Lua string) could stay uncoloured when a note was opened before the
+  inner language had loaded.
+- Settings now use Obsidian's declarative settings, so each one appears
+  in Obsidian's settings search (for example "secret" or a language
+  name).
+- `styles.css` no longer uses `!important`; checked against six themes
+  in dark and light mode with no visible change.
+- The bundled runtime's unused code for downloading files and for
+  running JavaScript embedded in a grammar (`eval`) is removed, and the
+  build refuses any grammar that carries JavaScript. `main.js` now
+  contains no network, file-system or `eval` code apart from the
+  Cmd-click link to CVE, CWE and ATT&CK pages.
+- Generated source files are now included in the repository, and
+  CONTRIBUTING.md explains how to build and test.
+
 ## 1.0.1 (12 November 2026)
 
 Changes for Obsidian's plugin review; highlighting looks the same.

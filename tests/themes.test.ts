@@ -47,3 +47,16 @@ test("no <style> elements and no inline style assignments in the plugin source",
   assert.doesNotMatch(src, /createEl\("style"|createElement\("style"\)/, "Obsidian does not allow plugins to create <style> elements");
   assert.doesNotMatch(src, /\.style\.[a-zA-Z]+\s*=/, "use CSS classes or setCssProps instead of element.style");
 });
+
+test("styles.css uses no !important (selector weight is used instead)", () => {
+  const css = fs.readFileSync(path.join(import.meta.dirname, "..", "styles.css"), "utf8");
+  assert.doesNotMatch(css, /!important/);
+});
+
+test("the built main.js has no network, file-system or eval code except the Cmd-click link", { skip: !fs.existsSync(path.join(import.meta.dirname, "..", "main.js")) }, () => {
+  const js = fs.readFileSync(path.join(import.meta.dirname, "..", "main.js"), "utf8");
+  for (const pattern of [/\bfetch\(/, /XMLHttpRequest/, /WebSocket/, /sendBeacon/, /require\("(fs|path|url|module)"\)/, /\beval\(/, /new Function\(/]) {
+    assert.doesNotMatch(js, pattern);
+  }
+  assert.equal(js.match(/window\.open\(/g)?.length, 1, "only the Cmd-click on a CVE, CWE or ATT&CK badge opens a web page");
+});

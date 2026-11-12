@@ -90,7 +90,7 @@ export function prepareQuery(text: string): string {
     .replace(/\(#set!\s+@[\w.]+\s+(?:"(?:[^"\\]|\\.)*"|[^\s)"]+)(?:\s+(?:"(?:[^"\\]|\\.)*"|[^\s)"]+))?\s*\)/g, "")
     .replace(/^\s*;+\s*(extends|inherits:.*)\s*$/gm, "")
     .replace(/\(#(not-)?lua-match\?\s+(@[\w.]+)\s+"((?:[^"\\]|\\.)*)"\)/g,
-      (_m, not, cap, pat) => {
+      (_m: string, not: string | undefined, cap: string, pat: string) => {
         const lua = pat.replace(/\\(.)/g, "$1");
         const re = luaPatternToRegex(lua).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
         return `(#${not ? "not-" : ""}match? ${cap} "${re}")`;
