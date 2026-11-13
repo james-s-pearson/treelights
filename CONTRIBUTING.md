@@ -25,6 +25,7 @@ npm install            # also checks the build tools' fingerprints
 npm run build:grammars # compiles every grammar from its pinned source
 npm run build          # main.js and styles.css
 npm test               # every test, including the supply-chain checks
+npm run typecheck      # TypeScript type check (the tests do not check types)
 npm run test:yara      # the YARA grammar's own tests
 ```
 

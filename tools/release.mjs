@@ -15,6 +15,7 @@ if (versions[manifest.version] !== manifest.minAppVersion) stopOn([`versions.jso
 stopOn(checkTools(), "build tools");
 const run = (cmd, args) => execFileSync(cmd, args, { cwd: root, stdio: "inherit" });
 run("npm", ["run", "build"]); // checks every grammar's fingerprint and imports
+run("npm", ["run", "typecheck"]); // the tests strip types without checking them
 run("npm", ["test"]);
 
 const out = path.join(root, "build/release", manifest.version);

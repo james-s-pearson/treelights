@@ -22,7 +22,8 @@ unchanged except for the fix below.
   contains no network, file-system or `eval` code apart from the
   Cmd-click link to CVE, CWE and ATT&CK pages.
 - Generated source files are now included in the repository, and
-  CONTRIBUTING.md explains how to build and test.
+  CONTRIBUTING.md explains how to build and test. Releases now also run
+  the TypeScript type check.
 
 ## 1.0.1 (12 November 2026)
 
