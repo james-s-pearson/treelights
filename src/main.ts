@@ -256,8 +256,8 @@ export default class TreelightsPlugin extends Plugin {
       ...(this.settings.securityFeatures && this.settings.hiddenCharacters ? findHidden(code) : []),
     ];
     if (!matches.length) return runs;
-    const cls: (string | undefined)[] = new Array(code.length);
-    const title: (string | undefined)[] = new Array(code.length);
+    const cls = new Array<string | undefined>(code.length);
+    const title = new Array<string | undefined>(code.length);
     const chipClasses = new Set<string>();
     for (const r of runs) for (let k = r.from; k < r.to; k++) cls[k] = r.cls;
     for (const m of matches) {
@@ -497,8 +497,8 @@ export default class TreelightsPlugin extends Plugin {
     if (!runs || (!hasGrammar && !runs.length)) return;
 
     // class for every source character (undefined = no colour)
-    const charClass: (string | undefined)[] = new Array(source.length);
-    const charTitle: (string | undefined)[] = new Array(source.length);
+    const charClass = new Array<string | undefined>(source.length);
+    const charTitle = new Array<string | undefined>(source.length);
     for (const r of runs) for (let k = r.from; k < r.to; k++) { charClass[k] = r.cls; charTitle[k] = r.title; }
 
     // Remove Obsidian's built-in highlighting (Prism "token" spans): its

@@ -1,6 +1,6 @@
 {
   "name": "treelights",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Accurate Tree-sitter syntax highlighting for Obsidian code blocks, with themes, theme import, colour previews and security indicators.",
   "private": true,
   "type": "module",

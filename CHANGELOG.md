@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.0.2 (12 November 2026)
 
 Fixes and hardening after Obsidian's plugin review; colours are
 unchanged except for the fix below.
