@@ -13,7 +13,7 @@ many open-source projects it depends on.
   on a CVE, CWE or MITRE ATT&CK badge opens its public page (nvd.nist.gov,
   cwe.mitre.org or attack.mitre.org) in your web browser. No other address
   can be opened this way.
-- **Your notes stay yours.** Treelights reads code blocks only to colour
+- **Your notes stay yours.** Treelights reads code blocks only to color
   them on screen. It never changes your notes, and it collects nothing.
   Its settings are saved in its own plugin folder. Importing a Helix
   theme reads only the file you pick.
@@ -169,7 +169,7 @@ grammar definition and any hand-written `scanner.c` before it is added.
   machine-generated `parser.c` files cannot be fully read by eye; the
   WebAssembly sandbox and the allow-list limit what such code could do.
 - A faulty grammar can still slow down or crash the code view.
-  Obsidian 1.15's JavaScript engine (V8 13.8) crashes when it optimises
+  Obsidian 1.15's JavaScript engine (V8 13.8) crashes when it optimizes
   a very large WebAssembly function; the Vim grammar's lexer (about
   800 KB) did this until it was split (see "Changes to upstream
   code"), and a test now fails if any grammar has a function over

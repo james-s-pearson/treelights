@@ -90,6 +90,6 @@ wildcards, negations and jumps like escape sequences, and `uint32()`-style
 reads as built-in functions. `queries/injections.scm` hands comments to the
 `comment` grammar.
 
-## Licence
+## License
 
 MIT. See [LICENSE](LICENSE).

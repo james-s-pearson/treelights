@@ -1,15 +1,15 @@
 # Changelog
 
-## 1.0.2 (12 November 2026)
+## 1.0.2 (November 12, 2026)
 
-Fixes and hardening after Obsidian's plugin review; colours are
+Fixes and hardening after Obsidian's plugin review; colors are
 unchanged except for the fix below.
 
 - Fixed: in Live Preview, code inside code (for example Vim commands in
-  a Lua string) could stay uncoloured when a note was opened before the
+  a Lua string) could stay uncolored when a note was opened before the
   inner language had loaded.
 - Fixed: tags in comments, such as TODO, NOTE, WARNING and FIXME, are
-  now coloured. Their highlight rules were missing from earlier
+  now colored. Their highlight rules were missing from earlier
   releases; a test now checks that every grammar has its rules.
 - Settings now use Obsidian's declarative settings, so each one appears
   in Obsidian's settings search (for example "secret" or a language
@@ -25,7 +25,7 @@ unchanged except for the fix below.
   CONTRIBUTING.md explains how to build and test. Releases now also run
   the TypeScript type check.
 
-## 1.0.1 (12 November 2026)
+## 1.0.1 (November 12, 2026)
 
 Changes for Obsidian's plugin review; highlighting looks the same.
 
@@ -37,16 +37,16 @@ Changes for Obsidian's plugin review; highlighting looks the same.
 - The theme file picker is hidden with a CSS class instead of an
   inline style; the "Remove" button uses Obsidian's current API.
 
-## 1.0.0 (12 November 2026)
+## 1.0.0 (November 12, 2026)
 
 First public release.
 
 - Tree-sitter highlighting for 31 languages, including code inside code
   (for example Vim script inside Lua), in Live Preview and Reading view.
 - Themes: Follow Obsidian theme (default), Neon Alley, Tokyo Night and
-  nine Helix themes; Helix theme import; Neovim colour-scheme export
+  nine Helix themes; Helix theme import; Neovim color-scheme export
   tool.
-- Colour previews for hex, rgb() and hsl() colours.
+- Color previews for hex, rgb() and hsl() colors.
 - Security features: indicators (addresses, URLs, paths, registry keys,
   hashes, wallets, CVE, CWE and ATT&CK IDs, with links), secret
   warnings and hidden-character checks, in code blocks and inline code.

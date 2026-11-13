@@ -55,7 +55,7 @@ the regenerated files with it. Do not edit them by hand.
   [SECURITY.md](SECURITY.md#updating-a-dependency): pinned to a full
   commit hash, reviewed, rebuilt and fingerprinted on purpose.
 
-## Licence
+## License
 
 By contributing, you agree that your contribution is licensed under the
-MIT licence in [LICENSE](LICENSE).
+MIT license in [LICENSE](LICENSE).

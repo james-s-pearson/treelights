@@ -5,7 +5,7 @@
 Accurate syntax highlighting for code blocks in [Obsidian](https://obsidian.md),
 using [Tree-sitter](https://tree-sitter.github.io/), the parsing library
 behind the highlighting in Neovim, Helix and Zed. Treelights also shows
-colour codes on their own colour and can flag security-relevant text in
+color codes on their own color and can flag security-relevant text in
 your notes: indicators, leaked secrets and hidden characters.
 
 ## How this was made
@@ -37,21 +37,21 @@ how the build is checked.
 
 **Themes**
 
-- **Follow Obsidian theme** (the default): uses the code colours of
+- **Follow Obsidian theme** (the default): uses the code colors of
   whatever Obsidian theme you use.
 - **Neon Alley** (dark and light), Tokyo Night (moon and day) and nine
   Helix themes: Catppuccin Mocha, Dracula, Gruvbox, Kanagawa, Nord,
   One Dark, Rosé Pine, Tokyo Night and Tokyo Night Storm.
-- **Import a Helix theme** (`.toml`), or export your Neovim colour scheme
+- **Import a Helix theme** (`.toml`), or export your Neovim color scheme
   with `tools/export-nvim-theme.lua` and load it as a theme file.
 
 ![Nine of the bundled themes](images/06-theme-gallery.png)
 
 ![Light mode with tokyonight-day](images/04-light-mode.png)
 
-**Colour previews**
+**Color previews**
 
-- `#ff6b1a`, `rgb()` and `hsl()` shown on their own colour.
+- `#ff6b1a`, `rgb()` and `hsl()` shown on their own color.
 
 **Security features** (one switch, each part can be turned off)
 
@@ -104,14 +104,14 @@ Phone and tablet support is planned for a later version.
 
 ## Known issues
 
-- A grammar can mark unusual or newer syntax as an error and colour it
+- A grammar can mark unusual or newer syntax as an error and color it
   less; for example the KQL grammar dates from 2023.
 - The plugin file is about 4 MB, because every grammar is included so
   nothing has to be downloaded.
 - Desktop only for now: Treelights does not yet load in Obsidian on
   phones and tablets. Windows and Linux are not yet tested.
 
-## Credits and licences
+## Credits and licenses
 
 Treelights is MIT licensed (see [LICENSE](LICENSE)). It includes:
 
@@ -129,7 +129,7 @@ Treelights is MIT licensed (see [LICENSE](LICENSE)). It includes:
   License 2.0).
 - **Helix themes** from the [Helix editor](https://github.com/helix-editor/helix)
   (Mozilla Public License 2.0), unchanged, in `themes/helix/`.
-- **Tokyo Night colours** from
+- **Tokyo Night colors** from
   [tokyonight.nvim](https://github.com/folke/tokyonight.nvim) by Folke
   Lemaitre (Apache License 2.0).
 - **web-tree-sitter**, the Tree-sitter runtime (MIT).
