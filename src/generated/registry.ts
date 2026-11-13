@@ -7,179 +7,180 @@ import a3 from "../../build/wasmz/c.wasm.z";
 import a4 from "../../queries/c/highlights.scm";
 import a5 from "../../queries/c/injections.scm";
 import a6 from "../../build/wasmz/comment.wasm.z";
-import a7 from "../../build/wasmz/cpp.wasm.z";
-import a8 from "../../queries/c/highlights.scm";
-import a9 from "../../queries/cpp/highlights.scm";
-import a10 from "../../queries/c/injections.scm";
-import a11 from "../../queries/cpp/injections.scm";
-import a12 from "../../build/wasmz/css.wasm.z";
-import a13 from "../../queries/css/highlights.scm";
-import a14 from "../../queries/css/injections.scm";
-import a15 from "../../build/wasmz/diff.wasm.z";
-import a16 from "../../queries/diff/highlights.scm";
-import a17 from "../../queries/diff/injections.scm";
-import a18 from "../../build/wasmz/dockerfile.wasm.z";
-import a19 from "../../queries/dockerfile/highlights.scm";
-import a20 from "../../queries/dockerfile/injections.scm";
-import a21 from "../../build/wasmz/dtd.wasm.z";
-import a22 from "../../queries/dtd/highlights.scm";
-import a23 from "../../queries/dtd/injections.scm";
-import a24 from "../../build/wasmz/git_config.wasm.z";
-import a25 from "../../queries/git_config/highlights.scm";
-import a26 from "../../queries/git_config/injections.scm";
-import a27 from "../../build/wasmz/gitattributes.wasm.z";
-import a28 from "../../queries/gitattributes/highlights.scm";
-import a29 from "../../queries/gitattributes/injections.scm";
-import a30 from "../../build/wasmz/gitignore.wasm.z";
-import a31 from "../../queries/gitignore/highlights.scm";
-import a32 from "../../queries/gitignore/injections.scm";
-import a33 from "../../build/wasmz/hcl.wasm.z";
-import a34 from "../../queries/hcl/highlights.scm";
-import a35 from "../../queries/hcl/injections.scm";
-import a36 from "../../build/wasmz/html.wasm.z";
-import a37 from "../../queries/html_tags/highlights.scm";
-import a38 from "../../queries/html/highlights.scm";
-import a39 from "../../queries/html_tags/injections.scm";
-import a40 from "../../queries/html/injections.scm";
-import a41 from "../../build/wasmz/ini.wasm.z";
-import a42 from "../../queries/ini/highlights.scm";
-import a43 from "../../queries/ini/injections.scm";
-import a44 from "../../build/wasmz/java.wasm.z";
-import a45 from "../../queries/java/highlights.scm";
-import a46 from "../../queries/java/injections.scm";
-import a47 from "../../build/wasmz/javascript.wasm.z";
-import a48 from "../../queries/ecma/highlights.scm";
-import a49 from "../../queries/jsx/highlights.scm";
-import a50 from "../../queries/javascript/highlights.scm";
-import a51 from "../../queries/ecma/injections.scm";
-import a52 from "../../queries/jsx/injections.scm";
-import a53 from "../../queries/javascript/injections.scm";
-import a54 from "../../build/wasmz/json.wasm.z";
-import a55 from "../../queries/json/highlights.scm";
-import a56 from "../../queries/json/injections.scm";
-import a57 from "../../build/wasmz/json5.wasm.z";
-import a58 from "../../queries/json5/highlights.scm";
-import a59 from "../../queries/json5/injections.scm";
-import a60 from "../../build/wasmz/kusto.wasm.z";
-import a61 from "../../queries/kusto/highlights.scm";
-import a62 from "../../queries-extra/kusto/highlights.scm";
-import a63 from "../../queries/kusto/injections.scm";
-import a64 from "../../build/wasmz/lua.wasm.z";
-import a65 from "../../queries/lua/highlights.scm";
-import a66 from "../../queries/lua/injections.scm";
-import a67 from "../../build/wasmz/luadoc.wasm.z";
-import a68 from "../../queries/luadoc/highlights.scm";
-import a69 from "../../build/wasmz/luap.wasm.z";
-import a70 from "../../queries/luap/highlights.scm";
-import a71 from "../../build/wasmz/markdown.wasm.z";
-import a72 from "../../queries/markdown/highlights.scm";
-import a73 from "../../queries/markdown/injections.scm";
-import a74 from "../../build/wasmz/markdown_inline.wasm.z";
-import a75 from "../../queries/markdown_inline/highlights.scm";
-import a76 from "../../queries/markdown_inline/injections.scm";
-import a77 from "../../build/wasmz/powershell.wasm.z";
-import a78 from "../../queries/powershell/highlights.scm";
-import a79 from "../../queries/powershell/injections.scm";
-import a80 from "../../build/wasmz/printf.wasm.z";
-import a81 from "../../queries/printf/highlights.scm";
-import a82 from "../../build/wasmz/python.wasm.z";
-import a83 from "../../queries/python/highlights.scm";
-import a84 from "../../queries/python/injections.scm";
-import a85 from "../../build/wasmz/query.wasm.z";
-import a86 from "../../queries/query/highlights.scm";
-import a87 from "../../queries/query/injections.scm";
-import a88 from "../../build/wasmz/regex.wasm.z";
-import a89 from "../../queries/regex/highlights.scm";
-import a90 from "../../build/wasmz/rego.wasm.z";
-import a91 from "../../queries/rego/highlights.scm";
-import a92 from "../../queries-extra/rego/highlights.scm";
-import a93 from "../../queries/rego/injections.scm";
-import a94 from "../../build/wasmz/sql.wasm.z";
-import a95 from "../../queries/sql/highlights.scm";
-import a96 from "../../queries/sql/injections.scm";
-import a97 from "../../build/wasmz/terraform.wasm.z";
-import a98 from "../../queries/hcl/highlights.scm";
-import a99 from "../../queries/terraform/highlights.scm";
-import a100 from "../../queries/hcl/injections.scm";
-import a101 from "../../queries/terraform/injections.scm";
-import a102 from "../../build/wasmz/toml.wasm.z";
-import a103 from "../../queries/toml/highlights.scm";
-import a104 from "../../queries/toml/injections.scm";
-import a105 from "../../build/wasmz/tsx.wasm.z";
-import a106 from "../../queries/ecma/highlights.scm";
-import a107 from "../../queries/typescript/highlights.scm";
-import a108 from "../../queries/jsx/highlights.scm";
-import a109 from "../../queries/tsx/highlights.scm";
-import a110 from "../../queries/ecma/injections.scm";
-import a111 from "../../queries/typescript/injections.scm";
-import a112 from "../../queries/jsx/injections.scm";
-import a113 from "../../queries/tsx/injections.scm";
-import a114 from "../../build/wasmz/typescript.wasm.z";
-import a115 from "../../queries/ecma/highlights.scm";
-import a116 from "../../queries/typescript/highlights.scm";
-import a117 from "../../queries/ecma/injections.scm";
-import a118 from "../../queries/typescript/injections.scm";
-import a119 from "../../build/wasmz/vim.wasm.z";
-import a120 from "../../queries/vim/highlights.scm";
-import a121 from "../../queries/vim/injections.scm";
-import a122 from "../../build/wasmz/xml.wasm.z";
-import a123 from "../../queries/xml/highlights.scm";
-import a124 from "../../queries/xml/injections.scm";
-import a125 from "../../build/wasmz/yaml.wasm.z";
-import a126 from "../../queries/yaml/highlights.scm";
-import a127 from "../../queries/yaml/injections.scm";
-import a128 from "../../build/wasmz/yara.wasm.z";
-import a129 from "../../queries/yara/highlights.scm";
-import a130 from "../../queries/yara/injections.scm";
-import a131 from "../../query-packs/lazyvim/lua/highlights.lazyvim.scm";
-import a132 from "../../query-packs/lazyvim/markdown/injections.lazyvim.scm";
-import a133 from "../../build/wasmz/web-tree-sitter.wasm.z";
+import a7 from "../../queries/comment/highlights.scm";
+import a8 from "../../build/wasmz/cpp.wasm.z";
+import a9 from "../../queries/c/highlights.scm";
+import a10 from "../../queries/cpp/highlights.scm";
+import a11 from "../../queries/c/injections.scm";
+import a12 from "../../queries/cpp/injections.scm";
+import a13 from "../../build/wasmz/css.wasm.z";
+import a14 from "../../queries/css/highlights.scm";
+import a15 from "../../queries/css/injections.scm";
+import a16 from "../../build/wasmz/diff.wasm.z";
+import a17 from "../../queries/diff/highlights.scm";
+import a18 from "../../queries/diff/injections.scm";
+import a19 from "../../build/wasmz/dockerfile.wasm.z";
+import a20 from "../../queries/dockerfile/highlights.scm";
+import a21 from "../../queries/dockerfile/injections.scm";
+import a22 from "../../build/wasmz/dtd.wasm.z";
+import a23 from "../../queries/dtd/highlights.scm";
+import a24 from "../../queries/dtd/injections.scm";
+import a25 from "../../build/wasmz/git_config.wasm.z";
+import a26 from "../../queries/git_config/highlights.scm";
+import a27 from "../../queries/git_config/injections.scm";
+import a28 from "../../build/wasmz/gitattributes.wasm.z";
+import a29 from "../../queries/gitattributes/highlights.scm";
+import a30 from "../../queries/gitattributes/injections.scm";
+import a31 from "../../build/wasmz/gitignore.wasm.z";
+import a32 from "../../queries/gitignore/highlights.scm";
+import a33 from "../../queries/gitignore/injections.scm";
+import a34 from "../../build/wasmz/hcl.wasm.z";
+import a35 from "../../queries/hcl/highlights.scm";
+import a36 from "../../queries/hcl/injections.scm";
+import a37 from "../../build/wasmz/html.wasm.z";
+import a38 from "../../queries/html_tags/highlights.scm";
+import a39 from "../../queries/html/highlights.scm";
+import a40 from "../../queries/html_tags/injections.scm";
+import a41 from "../../queries/html/injections.scm";
+import a42 from "../../build/wasmz/ini.wasm.z";
+import a43 from "../../queries/ini/highlights.scm";
+import a44 from "../../queries/ini/injections.scm";
+import a45 from "../../build/wasmz/java.wasm.z";
+import a46 from "../../queries/java/highlights.scm";
+import a47 from "../../queries/java/injections.scm";
+import a48 from "../../build/wasmz/javascript.wasm.z";
+import a49 from "../../queries/ecma/highlights.scm";
+import a50 from "../../queries/jsx/highlights.scm";
+import a51 from "../../queries/javascript/highlights.scm";
+import a52 from "../../queries/ecma/injections.scm";
+import a53 from "../../queries/jsx/injections.scm";
+import a54 from "../../queries/javascript/injections.scm";
+import a55 from "../../build/wasmz/json.wasm.z";
+import a56 from "../../queries/json/highlights.scm";
+import a57 from "../../queries/json/injections.scm";
+import a58 from "../../build/wasmz/json5.wasm.z";
+import a59 from "../../queries/json5/highlights.scm";
+import a60 from "../../queries/json5/injections.scm";
+import a61 from "../../build/wasmz/kusto.wasm.z";
+import a62 from "../../queries/kusto/highlights.scm";
+import a63 from "../../queries-extra/kusto/highlights.scm";
+import a64 from "../../queries/kusto/injections.scm";
+import a65 from "../../build/wasmz/lua.wasm.z";
+import a66 from "../../queries/lua/highlights.scm";
+import a67 from "../../queries/lua/injections.scm";
+import a68 from "../../build/wasmz/luadoc.wasm.z";
+import a69 from "../../queries/luadoc/highlights.scm";
+import a70 from "../../build/wasmz/luap.wasm.z";
+import a71 from "../../queries/luap/highlights.scm";
+import a72 from "../../build/wasmz/markdown.wasm.z";
+import a73 from "../../queries/markdown/highlights.scm";
+import a74 from "../../queries/markdown/injections.scm";
+import a75 from "../../build/wasmz/markdown_inline.wasm.z";
+import a76 from "../../queries/markdown_inline/highlights.scm";
+import a77 from "../../queries/markdown_inline/injections.scm";
+import a78 from "../../build/wasmz/powershell.wasm.z";
+import a79 from "../../queries/powershell/highlights.scm";
+import a80 from "../../queries/powershell/injections.scm";
+import a81 from "../../build/wasmz/printf.wasm.z";
+import a82 from "../../queries/printf/highlights.scm";
+import a83 from "../../build/wasmz/python.wasm.z";
+import a84 from "../../queries/python/highlights.scm";
+import a85 from "../../queries/python/injections.scm";
+import a86 from "../../build/wasmz/query.wasm.z";
+import a87 from "../../queries/query/highlights.scm";
+import a88 from "../../queries/query/injections.scm";
+import a89 from "../../build/wasmz/regex.wasm.z";
+import a90 from "../../queries/regex/highlights.scm";
+import a91 from "../../build/wasmz/rego.wasm.z";
+import a92 from "../../queries/rego/highlights.scm";
+import a93 from "../../queries-extra/rego/highlights.scm";
+import a94 from "../../queries/rego/injections.scm";
+import a95 from "../../build/wasmz/sql.wasm.z";
+import a96 from "../../queries/sql/highlights.scm";
+import a97 from "../../queries/sql/injections.scm";
+import a98 from "../../build/wasmz/terraform.wasm.z";
+import a99 from "../../queries/hcl/highlights.scm";
+import a100 from "../../queries/terraform/highlights.scm";
+import a101 from "../../queries/hcl/injections.scm";
+import a102 from "../../queries/terraform/injections.scm";
+import a103 from "../../build/wasmz/toml.wasm.z";
+import a104 from "../../queries/toml/highlights.scm";
+import a105 from "../../queries/toml/injections.scm";
+import a106 from "../../build/wasmz/tsx.wasm.z";
+import a107 from "../../queries/ecma/highlights.scm";
+import a108 from "../../queries/typescript/highlights.scm";
+import a109 from "../../queries/jsx/highlights.scm";
+import a110 from "../../queries/tsx/highlights.scm";
+import a111 from "../../queries/ecma/injections.scm";
+import a112 from "../../queries/typescript/injections.scm";
+import a113 from "../../queries/jsx/injections.scm";
+import a114 from "../../queries/tsx/injections.scm";
+import a115 from "../../build/wasmz/typescript.wasm.z";
+import a116 from "../../queries/ecma/highlights.scm";
+import a117 from "../../queries/typescript/highlights.scm";
+import a118 from "../../queries/ecma/injections.scm";
+import a119 from "../../queries/typescript/injections.scm";
+import a120 from "../../build/wasmz/vim.wasm.z";
+import a121 from "../../queries/vim/highlights.scm";
+import a122 from "../../queries/vim/injections.scm";
+import a123 from "../../build/wasmz/xml.wasm.z";
+import a124 from "../../queries/xml/highlights.scm";
+import a125 from "../../queries/xml/injections.scm";
+import a126 from "../../build/wasmz/yaml.wasm.z";
+import a127 from "../../queries/yaml/highlights.scm";
+import a128 from "../../queries/yaml/injections.scm";
+import a129 from "../../build/wasmz/yara.wasm.z";
+import a130 from "../../queries/yara/highlights.scm";
+import a131 from "../../queries/yara/injections.scm";
+import a132 from "../../query-packs/lazyvim/lua/highlights.lazyvim.scm";
+import a133 from "../../query-packs/lazyvim/markdown/injections.lazyvim.scm";
+import a134 from "../../build/wasmz/web-tree-sitter.wasm.z";
 
-export const runtimeWasm: Uint8Array = a133; // compressed
+export const runtimeWasm: Uint8Array = a134; // compressed
 export interface GrammarAsset { wasm: Uint8Array; highlights?: string; injections?: string } // wasm is compressed
 export const grammars: Record<string, GrammarAsset> = {
   "bash": { wasm: a0, highlights: [a1].join("\n"), injections: [a2].join("\n") },
   "c": { wasm: a3, highlights: [a4].join("\n"), injections: [a5].join("\n") },
-  "comment": { wasm: a6, highlights: undefined, injections: undefined },
-  "cpp": { wasm: a7, highlights: [a8, a9].join("\n"), injections: [a10, a11].join("\n") },
-  "css": { wasm: a12, highlights: [a13].join("\n"), injections: [a14].join("\n") },
-  "diff": { wasm: a15, highlights: [a16].join("\n"), injections: [a17].join("\n") },
-  "dockerfile": { wasm: a18, highlights: [a19].join("\n"), injections: [a20].join("\n") },
-  "dtd": { wasm: a21, highlights: [a22].join("\n"), injections: [a23].join("\n") },
-  "git_config": { wasm: a24, highlights: [a25].join("\n"), injections: [a26].join("\n") },
-  "gitattributes": { wasm: a27, highlights: [a28].join("\n"), injections: [a29].join("\n") },
-  "gitignore": { wasm: a30, highlights: [a31].join("\n"), injections: [a32].join("\n") },
-  "hcl": { wasm: a33, highlights: [a34].join("\n"), injections: [a35].join("\n") },
-  "html": { wasm: a36, highlights: [a37, a38].join("\n"), injections: [a39, a40].join("\n") },
-  "ini": { wasm: a41, highlights: [a42].join("\n"), injections: [a43].join("\n") },
-  "java": { wasm: a44, highlights: [a45].join("\n"), injections: [a46].join("\n") },
-  "javascript": { wasm: a47, highlights: [a48, a49, a50].join("\n"), injections: [a51, a52, a53].join("\n") },
-  "json": { wasm: a54, highlights: [a55].join("\n"), injections: [a56].join("\n") },
-  "json5": { wasm: a57, highlights: [a58].join("\n"), injections: [a59].join("\n") },
-  "kusto": { wasm: a60, highlights: [a61, a62].join("\n"), injections: [a63].join("\n") },
-  "lua": { wasm: a64, highlights: [a65].join("\n"), injections: [a66].join("\n") },
-  "luadoc": { wasm: a67, highlights: [a68].join("\n"), injections: undefined },
-  "luap": { wasm: a69, highlights: [a70].join("\n"), injections: undefined },
-  "markdown": { wasm: a71, highlights: [a72].join("\n"), injections: [a73].join("\n") },
-  "markdown_inline": { wasm: a74, highlights: [a75].join("\n"), injections: [a76].join("\n") },
-  "powershell": { wasm: a77, highlights: [a78].join("\n"), injections: [a79].join("\n") },
-  "printf": { wasm: a80, highlights: [a81].join("\n"), injections: undefined },
-  "python": { wasm: a82, highlights: [a83].join("\n"), injections: [a84].join("\n") },
-  "query": { wasm: a85, highlights: [a86].join("\n"), injections: [a87].join("\n") },
-  "regex": { wasm: a88, highlights: [a89].join("\n"), injections: undefined },
-  "rego": { wasm: a90, highlights: [a91, a92].join("\n"), injections: [a93].join("\n") },
-  "sql": { wasm: a94, highlights: [a95].join("\n"), injections: [a96].join("\n") },
-  "terraform": { wasm: a97, highlights: [a98, a99].join("\n"), injections: [a100, a101].join("\n") },
-  "toml": { wasm: a102, highlights: [a103].join("\n"), injections: [a104].join("\n") },
-  "tsx": { wasm: a105, highlights: [a106, a107, a108, a109].join("\n"), injections: [a110, a111, a112, a113].join("\n") },
-  "typescript": { wasm: a114, highlights: [a115, a116].join("\n"), injections: [a117, a118].join("\n") },
-  "vim": { wasm: a119, highlights: [a120].join("\n"), injections: [a121].join("\n") },
-  "xml": { wasm: a122, highlights: [a123].join("\n"), injections: [a124].join("\n") },
-  "yaml": { wasm: a125, highlights: [a126].join("\n"), injections: [a127].join("\n") },
-  "yara": { wasm: a128, highlights: [a129].join("\n"), injections: [a130].join("\n") },
+  "comment": { wasm: a6, highlights: [a7].join("\n"), injections: undefined },
+  "cpp": { wasm: a8, highlights: [a9, a10].join("\n"), injections: [a11, a12].join("\n") },
+  "css": { wasm: a13, highlights: [a14].join("\n"), injections: [a15].join("\n") },
+  "diff": { wasm: a16, highlights: [a17].join("\n"), injections: [a18].join("\n") },
+  "dockerfile": { wasm: a19, highlights: [a20].join("\n"), injections: [a21].join("\n") },
+  "dtd": { wasm: a22, highlights: [a23].join("\n"), injections: [a24].join("\n") },
+  "git_config": { wasm: a25, highlights: [a26].join("\n"), injections: [a27].join("\n") },
+  "gitattributes": { wasm: a28, highlights: [a29].join("\n"), injections: [a30].join("\n") },
+  "gitignore": { wasm: a31, highlights: [a32].join("\n"), injections: [a33].join("\n") },
+  "hcl": { wasm: a34, highlights: [a35].join("\n"), injections: [a36].join("\n") },
+  "html": { wasm: a37, highlights: [a38, a39].join("\n"), injections: [a40, a41].join("\n") },
+  "ini": { wasm: a42, highlights: [a43].join("\n"), injections: [a44].join("\n") },
+  "java": { wasm: a45, highlights: [a46].join("\n"), injections: [a47].join("\n") },
+  "javascript": { wasm: a48, highlights: [a49, a50, a51].join("\n"), injections: [a52, a53, a54].join("\n") },
+  "json": { wasm: a55, highlights: [a56].join("\n"), injections: [a57].join("\n") },
+  "json5": { wasm: a58, highlights: [a59].join("\n"), injections: [a60].join("\n") },
+  "kusto": { wasm: a61, highlights: [a62, a63].join("\n"), injections: [a64].join("\n") },
+  "lua": { wasm: a65, highlights: [a66].join("\n"), injections: [a67].join("\n") },
+  "luadoc": { wasm: a68, highlights: [a69].join("\n"), injections: undefined },
+  "luap": { wasm: a70, highlights: [a71].join("\n"), injections: undefined },
+  "markdown": { wasm: a72, highlights: [a73].join("\n"), injections: [a74].join("\n") },
+  "markdown_inline": { wasm: a75, highlights: [a76].join("\n"), injections: [a77].join("\n") },
+  "powershell": { wasm: a78, highlights: [a79].join("\n"), injections: [a80].join("\n") },
+  "printf": { wasm: a81, highlights: [a82].join("\n"), injections: undefined },
+  "python": { wasm: a83, highlights: [a84].join("\n"), injections: [a85].join("\n") },
+  "query": { wasm: a86, highlights: [a87].join("\n"), injections: [a88].join("\n") },
+  "regex": { wasm: a89, highlights: [a90].join("\n"), injections: undefined },
+  "rego": { wasm: a91, highlights: [a92, a93].join("\n"), injections: [a94].join("\n") },
+  "sql": { wasm: a95, highlights: [a96].join("\n"), injections: [a97].join("\n") },
+  "terraform": { wasm: a98, highlights: [a99, a100].join("\n"), injections: [a101, a102].join("\n") },
+  "toml": { wasm: a103, highlights: [a104].join("\n"), injections: [a105].join("\n") },
+  "tsx": { wasm: a106, highlights: [a107, a108, a109, a110].join("\n"), injections: [a111, a112, a113, a114].join("\n") },
+  "typescript": { wasm: a115, highlights: [a116, a117].join("\n"), injections: [a118, a119].join("\n") },
+  "vim": { wasm: a120, highlights: [a121].join("\n"), injections: [a122].join("\n") },
+  "xml": { wasm: a123, highlights: [a124].join("\n"), injections: [a125].join("\n") },
+  "yaml": { wasm: a126, highlights: [a127].join("\n"), injections: [a128].join("\n") },
+  "yara": { wasm: a129, highlights: [a130].join("\n"), injections: [a131].join("\n") },
 };
 
 export const queryPacks: Array<{ pack: string; lang: string; kind: string; text: string }> = [
-  { pack: "lazyvim", lang: "lua", kind: "highlights", text: a131 },
-  { pack: "lazyvim", lang: "markdown", kind: "injections", text: a132 },
+  { pack: "lazyvim", lang: "lua", kind: "highlights", text: a132 },
+  { pack: "lazyvim", lang: "markdown", kind: "injections", text: a133 },
 ];

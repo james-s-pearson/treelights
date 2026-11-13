@@ -8,6 +8,9 @@ unchanged except for the fix below.
 - Fixed: in Live Preview, code inside code (for example Vim commands in
   a Lua string) could stay uncoloured when a note was opened before the
   inner language had loaded.
+- Fixed: tags in comments, such as TODO, NOTE, WARNING and FIXME, are
+  now coloured. Their highlight rules were missing from earlier
+  releases; a test now checks that every grammar has its rules.
 - Settings now use Obsidian's declarative settings, so each one appears
   in Obsidian's settings search (for example "secret" or a language
   name).

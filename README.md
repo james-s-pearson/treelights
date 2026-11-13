@@ -25,7 +25,8 @@ how the build is checked.
   PowerShell, Python, Rego, SQL, Terraform, TOML, TSX, TypeScript, Vim
   script, XML, YAML and YARA.
 - Code inside code is highlighted too, for example Vim commands inside
-  Lua, regular expressions, and doc comments.
+  Lua, regular expressions, doc comments, and tags such as `TODO:` and
+  `FIXME:` in comments.
 - Works in Live Preview and Reading view, alongside plugins that add
   line numbers or headers to code blocks.
 - Use the language's name after the opening ` ``` `; common short names

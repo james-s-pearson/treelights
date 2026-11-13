@@ -60,3 +60,9 @@ test("the built main.js has no network, file-system or eval code except the Cmd-
   }
   assert.equal(js.match(/window\.open\(/g)?.length, 1, "only the Cmd-click on a CVE, CWE or ATT&CK badge opens a web page");
 });
+
+test("every grammar has its highlight rules", () => {
+  const registry = fs.readFileSync(path.join(import.meta.dirname, "..", "src/generated/registry.ts"), "utf8");
+  const missing = [...registry.matchAll(/^\s*"([\w-]+)": \{ wasm: \w+, highlights: undefined/gm)].map((m) => m[1]);
+  assert.deepEqual(missing, [], `grammars without highlight rules: ${missing.join(", ")}`);
+});
